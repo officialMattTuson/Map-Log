@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import * as mapboxgl from 'mapbox-gl';
-import { environment } from 'src/environments/environments';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { Component, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environments';
+import { LngLatLike } from 'mapbox-gl';
 
 @Component({
   selector: 'app-world-map',
@@ -11,28 +11,29 @@ import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 })
 export class WorldMapComponent implements OnInit {
   public markers: mapboxgl.Marker[] = [];
-  public aucklandCoordinates = [174.7645, -36.8509];
+  public aucklandCoordinates: LngLatLike = [174.7645, -36.8509];
 
-  constructor(private readonly titleService: Title) {}
   ngOnInit(): void {
-    this.titleService.setTitle('Holiday Map');
     navigator.geolocation.getCurrentPosition(
-      (position: GeolocationPosition) => this.successLocation(position),
-      () => this.errorLocation(),
+      (position: GeolocationPosition) => this.onLocationSuccess(position),
+      () => this.onLocationError(),
       { enableHighAccuracy: true }
     );
   }
 
-  successLocation(position: GeolocationPosition) {
-    const centralCoords = [position.coords.longitude, position.coords.latitude];
+  onLocationSuccess(position: GeolocationPosition) {
+    const centralCoords: LngLatLike = [
+      position.coords.longitude,
+      position.coords.latitude,
+    ];
     this.setupMap(centralCoords);
   }
 
-  errorLocation() {
+  onLocationError() {
     this.setupMap(this.aucklandCoordinates);
   }
 
-  setupMap(coordinates?: any) {
+  setupMap(coordinates: LngLatLike) {
     (mapboxgl as typeof mapboxgl).accessToken = environment.mapboxAccessToken;
     const map = new mapboxgl.Map({
       container: 'map',
@@ -40,36 +41,36 @@ export class WorldMapComponent implements OnInit {
       center: coordinates,
       zoom: 10,
     });
-    const nav = new mapboxgl.NavigationControl();
-    map.addControl(nav);
-
     const scale = new mapboxgl.ScaleControl({
       maxWidth: 200,
       unit: 'metric',
     });
-    map.addControl(scale, 'bottom-right');
-
-    const fullscreen = new mapboxgl.FullscreenControl();
-    map.addControl(fullscreen, 'top-right');
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
     });
+    map.addControl(scale, 'bottom-right');
+    map.addControl(geocoder, 'top-right');
+    map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
 
-    map.addControl(geocoder, 'top-left');
+    const marker2 = new mapboxgl.Marker({ color: 'red', anchor: 'center' })
+      .setLngLat(coordinates)
+      .addTo(map);
+
+    const popup = new mapboxgl.Popup({ closeOnClick: false })
+      .setLngLat(this.aucklandCoordinates)
+      .setHTML('<h3>Auckland!</h3>')
+      .addTo(map)
+
     map.on('click', (e: any) => {
-      const coordinates = e.lngLat.toArray();
+      const clickedCoordinates = e.lngLat.toArray();
 
-      const marker = new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+      const marker = new mapboxgl.Marker()
+        .setLngLat(clickedCoordinates)
+        .addTo(map);
       this.markers.push(marker);
     });
-
-    // const directions = new MapboxDirections({
-    //   accessToken: mapboxgl.accessToken,
-    //   unit: 'metric', // 'imperial' for miles, 'metric' for kilometers
-    // });
-
-    // map.addControl(directions, 'top-left');
   }
 
   removeAllMarkers() {
@@ -77,3 +78,7 @@ export class WorldMapComponent implements OnInit {
     this.markers = [];
   }
 }
+function addClassName(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+

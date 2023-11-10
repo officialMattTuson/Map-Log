@@ -37,3 +37,11 @@ $holiday-map-theme: mat.define-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mapboxgl-ctrl-geocoder, .mapboxgl-ctrl-geocoder {
+  width: 15rem;
+}
+
+.mapboxgl-ctrl-geocoder input[type='text'] {
+  margin-inline-start: 1.25rem;
+}
