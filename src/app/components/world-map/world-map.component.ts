@@ -41,6 +41,16 @@ export class WorldMapComponent implements OnInit {
       center: coordinates,
       zoom: 10,
     });
+
+    this.setUpMapControls(map);
+    this.createMarker(map);
+    this.setDefaultMarker(map, coordinates);
+    // Popup example, will be removed at a later stage
+    this.addAucklandPopup(map);
+    this.searchGeocoder(map);
+  }
+
+  setUpMapControls(map: mapboxgl.Map) {
     const scale = new mapboxgl.ScaleControl({
       maxWidth: 200,
       unit: 'metric',
@@ -53,24 +63,48 @@ export class WorldMapComponent implements OnInit {
     map.addControl(geocoder, 'top-right');
     map.addControl(new mapboxgl.NavigationControl());
     map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+  }
 
-    const marker2 = new mapboxgl.Marker({ color: 'red', anchor: 'bottom' })
+  setDefaultMarker(map: mapboxgl.Map, coordinates: LngLatLike) {
+    const defaultLocationMarker = new mapboxgl.Marker({
+      color: 'red',
+      anchor: 'bottom',
+    })
       .setLngLat(coordinates)
       .addTo(map);
 
-    const popup = new mapboxgl.Popup({ closeOnClick: false })
-      .setLngLat(this.aucklandCoordinates)
-      .setHTML('<h3>Auckland!</h3>')
-      .addTo(map);
+    defaultLocationMarker
+      .getElement()
+      .addEventListener('click', (event: MouseEvent) => {
+        event.stopPropagation();
+        defaultLocationMarker.togglePopup();
+      });
+  }
 
+  createMarker(map: mapboxgl.Map) {
     map.on('click', (event: MapMouseEvent) => {
-      const clickedCoordinates: LngLatLike = event.lngLat;
-      const marker = new mapboxgl.Marker()
-        .setLngLat(clickedCoordinates)
+      const popup = new mapboxgl.Popup()
+        .setLngLat(event.lngLat)
+        .setHTML(
+          '<h3>Options</h3><button id="placeMarker">Place Marker</button>'
+        )
         .addTo(map);
-      this.markers.push(marker);
-    });
 
+      popup.getElement().addEventListener('click', (popupEvent) => {
+        const target = popupEvent.target as HTMLElement;
+
+        if (target.id === 'placeMarker') {
+          const marker = new mapboxgl.Marker()
+            .setLngLat(event.lngLat)
+            .addTo(map);
+          popup.remove();
+          this.markers.push(marker);
+        }
+      });
+    });
+  }
+
+  searchGeocoder(map: mapboxgl.Map) {
     map.addControl(
       new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
@@ -108,22 +142,29 @@ export class WorldMapComponent implements OnInit {
 
     const coord1: number = Number(matches[1]);
     const coord2: number = Number(matches[2]);
-    const geocodes: any[] = [];
+    const geoCodes: any[] = [];
 
     if (coord1 < -90 || coord1 > 90) {
-      geocodes.push(coordinateFeature(coord1, coord2));
+      geoCodes.push(coordinateFeature(coord1, coord2));
     }
 
     if (coord2 < -90 || coord2 > 90) {
-      geocodes.push(coordinateFeature(coord2, coord1));
+      geoCodes.push(coordinateFeature(coord2, coord1));
     }
 
-    if (geocodes.length === 0) {
-      geocodes.push(coordinateFeature(coord1, coord2));
-      geocodes.push(coordinateFeature(coord2, coord1));
+    if (geoCodes.length === 0) {
+      geoCodes.push(coordinateFeature(coord1, coord2));
+      geoCodes.push(coordinateFeature(coord2, coord1));
     }
 
-    return geocodes;
+    return geoCodes;
+  }
+
+  addAucklandPopup(map: mapboxgl.Map) {
+    const popup = new mapboxgl.Popup({ closeOnClick: false })
+    .setLngLat(this.aucklandCoordinates)
+    .setHTML('<h3>Auckland!</h3>')
+    .addTo(map);
   }
 
   removeAllMarkers() {
