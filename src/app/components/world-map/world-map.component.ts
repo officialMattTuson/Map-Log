@@ -131,6 +131,3 @@ export class WorldMapComponent implements OnInit {
     this.markers = [];
   }
 }
-function addClassName(arg0: string) {
-  throw new Error('Function not implemented.');
-}
