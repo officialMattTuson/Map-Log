@@ -1,8 +1,15 @@
 import * as mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  ComponentFactoryResolver,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { environment } from 'src/environments/environments';
 import { LngLatLike, MapMouseEvent } from 'mapbox-gl';
+import { PopupHostDirective } from 'src/app/directives/popup-host.directive';
+import { MarkerPopupComponent } from '../marker-popup/marker-popup.component';
 
 @Component({
   selector: 'app-world-map',
@@ -12,6 +19,11 @@ import { LngLatLike, MapMouseEvent } from 'mapbox-gl';
 export class WorldMapComponent implements OnInit {
   public markers: mapboxgl.Marker[] = [];
   public aucklandCoordinates: LngLatLike = [174.7645, -36.8509];
+  public selectedLocation: { name: string; description: string } | null = null;
+
+  @ViewChild(PopupHostDirective, { static: true })
+  popupHost: PopupHostDirective;
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
   ngOnInit(): void {
     navigator.geolocation.getCurrentPosition(
@@ -66,13 +78,16 @@ export class WorldMapComponent implements OnInit {
   }
 
   setDefaultLocationMarker(map: mapboxgl.Map, coordinates: LngLatLike) {
+    const defaultMarkerPopup = new mapboxgl.Popup({
+      closeOnClick: true,
+    }).setHTML('<h1>Hello World!</h1>');
+    defaultMarkerPopup.addClassName('home-marker-popup');
     const defaultLocationMarker = new mapboxgl.Marker({
       color: 'red',
       anchor: 'bottom',
-      draggable: true
     })
       .setLngLat(coordinates)
-      .setPopup(new mapboxgl.Popup().setHTML("<h1>Hello World!</h1>"))
+      .setPopup(defaultMarkerPopup)
       .addTo(map);
 
     defaultLocationMarker
@@ -85,31 +100,54 @@ export class WorldMapComponent implements OnInit {
 
   createMarker(map: mapboxgl.Map) {
     map.on('click', (event: MapMouseEvent) => {
-      const popup = new mapboxgl.Popup()
-        .setLngLat(event.lngLat)
-        .setHTML(
-          '<h3>Options</h3><button id="placeMarker">Place Marker</button>'
-        )
-        .addTo(map);
-      popup.getElement().addEventListener('click', (popupEvent) => {
-        const target = popupEvent.target as HTMLElement;
-
-        if (target.id === 'placeMarker') {
-          const marker = new mapboxgl.Marker({draggable: true})
-            .setLngLat(event.lngLat)
-            .addTo(map);
-          popup.remove();
-          this.markers.push(marker);
-        }
+      this.selectedLocation = this.getLocationInfoAtCoordinates(event.lngLat.toArray());
+      const clickedMarker = this.markers.find(marker => {
+        const markerScreenPoint = map.project(marker.getLngLat());
+        return markerScreenPoint.dist(map.project(event.lngLat)) < 45;
       });
+  
+      if (clickedMarker) {
+        const popupComponentFactory = this.componentFactoryResolver.resolveComponentFactory(MarkerPopupComponent);
+        const popupComponentRef = this.popupHost.viewContainerRef.createComponent(popupComponentFactory);
+        popupComponentRef.instance.title = this.selectedLocation.name;
+        popupComponentRef.instance.description = this.selectedLocation.description;
+        
+        const markerScreenPoint = map.project(clickedMarker.getLngLat());
+        const popupLngLat = map.unproject(markerScreenPoint.add(new mapboxgl.Point(0, -40)));
+  
+        new mapboxgl.Popup()
+          .setLngLat(popupLngLat)
+          .setDOMContent(popupComponentRef.location.nativeElement)
+          .addTo(map);
+      } else {
+        const popup = new mapboxgl.Popup({ closeOnClick: true })
+          .setLngLat(event.lngLat)
+          .setHTML('<h3>Options</h3><button id="placeMarker">Place Marker</button>')
+          .addTo(map);
+  
+        popup.getElement().addEventListener('click', (popupEvent) => {
+          const target = popupEvent.target as HTMLElement;
+  
+          if (target.id === 'placeMarker') {
+            const marker = new mapboxgl.Marker({ draggable: true })
+              .setLngLat(event.lngLat)
+              .addTo(map);
+            popup.remove();
+            this.markers.push(marker);
+          }
+        });
+      }
     });
+  }
 
-    this.markers.forEach((marker) => {
-      marker.getElement().addEventListener('click', () => {
-        marker.togglePopup();
-        console.log('marker clicked')
-      });
-    });
+  getLocationInfoAtCoordinates(coordinates: number[]): {
+    name: string;
+    description: string;
+  } {
+    return {
+      name: 'Location Name',
+      description: 'Location Description',
+    };
   }
 
   searchGeocoder(map: mapboxgl.Map) {
@@ -170,9 +208,9 @@ export class WorldMapComponent implements OnInit {
 
   addAucklandPopup(map: mapboxgl.Map) {
     const popup = new mapboxgl.Popup({ closeOnClick: false })
-    .setLngLat(this.aucklandCoordinates)
-    .setHTML('<h3>Auckland!</h3>')
-    .addTo(map);
+      .setLngLat(this.aucklandCoordinates)
+      .setHTML('<h3>Auckland!</h3>')
+      .addTo(map);
   }
 
   removeAllMarkers() {
