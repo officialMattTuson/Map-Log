@@ -43,8 +43,8 @@ export class WorldMapComponent implements OnInit {
     });
 
     this.setUpMapControls(map);
+    this.setDefaultLocationMarker(map, coordinates);
     this.createMarker(map);
-    this.setDefaultMarker(map, coordinates);
     // Popup example, will be removed at a later stage
     this.addAucklandPopup(map);
     this.searchGeocoder(map);
@@ -65,12 +65,14 @@ export class WorldMapComponent implements OnInit {
     map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
   }
 
-  setDefaultMarker(map: mapboxgl.Map, coordinates: LngLatLike) {
+  setDefaultLocationMarker(map: mapboxgl.Map, coordinates: LngLatLike) {
     const defaultLocationMarker = new mapboxgl.Marker({
       color: 'red',
       anchor: 'bottom',
+      draggable: true
     })
       .setLngLat(coordinates)
+      .setPopup(new mapboxgl.Popup().setHTML("<h1>Hello World!</h1>"))
       .addTo(map);
 
     defaultLocationMarker
@@ -89,17 +91,23 @@ export class WorldMapComponent implements OnInit {
           '<h3>Options</h3><button id="placeMarker">Place Marker</button>'
         )
         .addTo(map);
-
       popup.getElement().addEventListener('click', (popupEvent) => {
         const target = popupEvent.target as HTMLElement;
 
         if (target.id === 'placeMarker') {
-          const marker = new mapboxgl.Marker()
+          const marker = new mapboxgl.Marker({draggable: true})
             .setLngLat(event.lngLat)
             .addTo(map);
           popup.remove();
           this.markers.push(marker);
         }
+      });
+    });
+
+    this.markers.forEach((marker) => {
+      marker.getElement().addEventListener('click', () => {
+        marker.togglePopup();
+        console.log('marker clicked')
       });
     });
   }
