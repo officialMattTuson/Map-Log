@@ -8,19 +8,49 @@ import { WorldMapComponent } from './components/world-map/world-map.component';
 import { MarkerPopupComponent } from './components/marker-popup/marker-popup.component';
 import { PopupHostDirective } from './directives/popup-host.directive';
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
+import { MatSidenavModule } from '@angular/material/sidenav';
+
 @NgModule({
   declarations: [
     AppComponent,
     WorldMapComponent,
     PopupHostDirective,
-    MarkerPopupComponent
+    MarkerPopupComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatSidenavModule
+  ],
+  exports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatSidenavModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
