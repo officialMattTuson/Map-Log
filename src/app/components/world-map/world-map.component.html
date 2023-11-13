@@ -1,12 +1,16 @@
-<div id="map">
-  <button
-    *ngIf="markers.length > 0"
-    class="remove-marker"
-    (click)="removeAllMarkers()"
-  >
-    Remove Markers
-  </button>
-</div>
+<mat-drawer-container class="drawer-container">
+  <div id="map">
+    <button
+      *ngIf="markers.length > 0"
+      class="remove-marker"
+      (click)="removeAllMarkers()"
+    >
+      Remove Markers
+    </button>
+  </div>
 
-<div appPopupHost></div>
+  <div appPopupHost></div>
 
+  <mat-drawer class="map-drawer" opened="false" mode="over">
+  </mat-drawer>
+</mat-drawer-container>
