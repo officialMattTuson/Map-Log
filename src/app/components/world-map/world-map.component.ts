@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environments';
 import { LngLatLike, MapMouseEvent } from 'mapbox-gl';
 import { PopupHostDirective } from 'src/app/directives/popup-host.directive';
 import { MarkerPopupComponent } from '../marker-popup/marker-popup.component';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-world-map',
@@ -21,6 +22,7 @@ export class WorldMapComponent implements OnInit {
   public aucklandCoordinates: LngLatLike = [174.7645, -36.8509];
   public selectedLocation: { name: string; description: string } | null = null;
 
+  @ViewChild('drawer') drawer: MatDrawer;
   @ViewChild(PopupHostDirective, { static: true })
   popupHost: PopupHostDirective;
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
@@ -105,7 +107,6 @@ export class WorldMapComponent implements OnInit {
         const markerScreenPoint = map.project(marker.getLngLat());
         return markerScreenPoint.dist(map.project(event.lngLat)) < 45;
       });
-  
       if (clickedMarker) {
         const popupComponentFactory = this.componentFactoryResolver.resolveComponentFactory(MarkerPopupComponent);
         const popupComponentRef = this.popupHost.viewContainerRef.createComponent(popupComponentFactory);
@@ -133,7 +134,7 @@ export class WorldMapComponent implements OnInit {
               .setLngLat(event.lngLat)
               .addTo(map);
             popup.remove();
-            this.markers.push(marker);
+            this.markers = [...this.markers, marker];
           }
         });
       }
@@ -216,5 +217,9 @@ export class WorldMapComponent implements OnInit {
   removeAllMarkers() {
     this.markers.forEach((marker) => marker.remove());
     this.markers = [];
+  }
+
+  openInDrawer() {
+    this.drawer.open();
   }
 }

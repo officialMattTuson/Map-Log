@@ -16,6 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MapDrawerComponent } from './components/map-drawer/map-drawer.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     WorldMapComponent,
     PopupHostDirective,
     MarkerPopupComponent,
+    MapDrawerComponent,
   ],
   imports: [
     BrowserModule,
