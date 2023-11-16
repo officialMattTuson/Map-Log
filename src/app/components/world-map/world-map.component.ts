@@ -25,6 +25,8 @@ export class WorldMapComponent implements OnInit {
   public aucklandCoordinates: LngLatLike = [174.7645, -36.8509];
   public selectedLocation: {name: string; description: string} | null = null;
 
+  isOverlayOpen$ = this.mapOverlayService.isOverlayOpen$;
+
   @ViewChild('drawer') drawer: MatDrawer;
   @ViewChild(PopupHostDirective, {static: true}) popupHost: PopupHostDirective;
   @ViewChild(MapOverlayDirective, {static: true})

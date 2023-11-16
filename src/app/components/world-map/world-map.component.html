@@ -2,8 +2,9 @@
   <mat-drawer
     class="map-drawer"
     mode="over"
-    [disableClose]="false"
-    fixedInViewPort="false"
+    [disableClose]="true"
+    fixedInViewPort="true"
+    [opened]="isOverlayOpen$ | async"
   >
     <ng-template appMapOverlay></ng-template>
   </mat-drawer>

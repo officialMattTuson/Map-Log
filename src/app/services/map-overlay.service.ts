@@ -31,7 +31,7 @@ export class MapOverlayService {
       this._mapDirective.viewContainerRef.createComponent(MapOverlayComponent);
     this._mapOverlayComponentRef.setInput('data', data);
     this._mapOverlayComponentRef.instance.createMapOverlayComponent(
-      overlayComponent,
+      overlayComponent, data
     );
   }
 

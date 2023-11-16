@@ -1,26 +1,24 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
-import {FeatureIdentifier, LngLat, Marker} from 'mapbox-gl';
+import {Component, OnInit} from '@angular/core';
+import {LngLat, Marker} from 'mapbox-gl';
 import {take} from 'rxjs';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
+import {MapOverlayService} from 'src/app/services/map-overlay.service';
 
 @Component({
   selector: 'app-map-drawer',
   templateUrl: './map-drawer.component.html',
   styleUrls: ['./map-drawer.component.scss'],
 })
-export class MapDrawerComponent implements OnChanges {
-  constructor(private readonly geocoderService: GeocoderService) {}
-  @Input() markers: Marker[];
+export class MapDrawerComponent implements OnInit {
+  constructor(
+    private readonly geocoderService: GeocoderService,
+    private readonly mapOverlayService: MapOverlayService,
+  ) {}
+  markers: Marker[];
   mappedMarkers: LngLat[];
   selectedLocations: any[] = [];
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnInit() {
     this.mappedMarkers = this.markers.map(marker => marker.getLngLat());
     this.getFeatures();
   }
@@ -44,5 +42,9 @@ export class MapDrawerComponent implements OnChanges {
           },
         });
     });
+  }
+
+  closeOverlay() {
+    this.mapOverlayService.closeOverlay();
   }
 }

@@ -2,6 +2,7 @@ import {Component, ComponentRef, Input, Type, ViewChild} from '@angular/core';
 import {MapDrawerComponent} from '../map-drawer/map-drawer.component';
 import {MapOverlayDirective} from 'src/app/directives/map-overlay.directive';
 import {Subject} from 'rxjs';
+import {MapOverlayService} from 'src/app/services/map-overlay.service';
 
 @Component({
   selector: 'app-map-overlay',
@@ -18,9 +19,19 @@ export class MapOverlayComponent {
   mapOverlayDirective: MapOverlayDirective;
   destroy$ = new Subject<boolean>();
 
-  createMapOverlayComponent(overlayComponent: Type<MapDrawerComponent>) {
+  constructor(private readonly mapOverlayService: MapOverlayService) {}
+
+  createMapOverlayComponent(
+    overlayComponent: Type<MapDrawerComponent>,
+    data: any,
+  ) {
     const containerRef = this.mapOverlayDirective.viewContainerRef;
     this.mapOverlayComponentRef =
       containerRef.createComponent<MapDrawerComponent>(overlayComponent);
+    this.mapOverlayComponentRef.instance.markers = data;
+  }
+
+  closeOverlay() {
+    this.mapOverlayService.closeOverlay();
   }
 }
