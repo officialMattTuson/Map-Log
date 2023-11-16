@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {FeatureIdentifier, LngLat, Marker} from 'mapbox-gl'
 import {take} from 'rxjs'
-import {GeocoderService} from 'src/app/geocoder.service'
+import {GeocoderService} from 'src/app/endpoints/geocoder.service'
 
 @Component({
   selector: 'app-map-drawer',

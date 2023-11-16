@@ -1,4 +1,12 @@
 <mat-drawer-container class="drawer-container">
+  <mat-drawer
+    class="map-drawer"
+    mode="over"
+    [disableClose]="false"
+    fixedInViewPort="false"
+  >
+    <ng-template appMapOverlay></ng-template>
+  </mat-drawer>
   <mat-drawer-content>
     <div id="map">
       <div class="map-buttons">
@@ -14,7 +22,7 @@
           mat-raised-button
           *ngIf="markers.length > 0"
           class="open-btn"
-          (click)="openInDrawer()"
+          (click)="openOverlay()"
         >
           Open In Side Panel
         </button>
@@ -23,7 +31,4 @@
 
     <div appPopupHost></div>
   </mat-drawer-content>
-  <mat-drawer #drawer class="map-drawer" mode="over">
-    <app-map-drawer [markers]="markers"></app-map-drawer>
-  </mat-drawer>
 </mat-drawer-container>

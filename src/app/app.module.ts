@@ -19,6 +19,7 @@ import {MatSidenavModule} from '@angular/material/sidenav'
 import {MapDrawerComponent} from './components/map-drawer/map-drawer.component'
 import {HttpClientModule} from '@angular/common/http'
 import {MapOverlayDirective} from './directives/map-overlay.directive'
+import {MapOverlayComponent} from './components/map-overlay/map-overlay.component'
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import {MapOverlayDirective} from './directives/map-overlay.directive'
     MarkerPopupComponent,
     MapDrawerComponent,
     MapOverlayDirective,
+    MapOverlayComponent,
   ],
   imports: [
     BrowserModule,

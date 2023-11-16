@@ -11,6 +11,9 @@ import {LngLatLike, MapMouseEvent} from 'mapbox-gl'
 import {PopupHostDirective} from 'src/app/directives/popup-host.directive'
 import {MarkerPopupComponent} from '../marker-popup/marker-popup.component'
 import {MatDrawer} from '@angular/material/sidenav'
+import {MapOverlayService} from 'src/app/services/map-overlay.service'
+import {MapDrawerComponent} from '../map-drawer/map-drawer.component'
+import {MapOverlayDirective} from 'src/app/directives/map-overlay.directive'
 
 @Component({
   selector: 'app-world-map',
@@ -23,11 +26,17 @@ export class WorldMapComponent implements OnInit {
   public selectedLocation: {name: string; description: string} | null = null
 
   @ViewChild('drawer') drawer: MatDrawer
-  @ViewChild(PopupHostDirective, {static: true})
-  popupHost: PopupHostDirective
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+  @ViewChild(PopupHostDirective, {static: true}) popupHost: PopupHostDirective
+  @ViewChild(MapOverlayDirective, {static: true})
+  overlayDirective: MapOverlayDirective
+
+  constructor(
+    private readonly componentFactoryResolver: ComponentFactoryResolver,
+    private readonly mapOverlayService: MapOverlayService,
+  ) {}
 
   ngOnInit(): void {
+    this.mapOverlayService.setOverlayDirective(this.overlayDirective);
     navigator.geolocation.getCurrentPosition(
       (position: GeolocationPosition) => this.onLocationSuccess(position),
       () => this.onLocationError(),
@@ -230,7 +239,7 @@ export class WorldMapComponent implements OnInit {
     this.markers = []
   }
 
-  openInDrawer() {
-    this.drawer.open()
+  openOverlay() {
+    this.mapOverlayService.openPanel(MapDrawerComponent, this.markers)
   }
 }
