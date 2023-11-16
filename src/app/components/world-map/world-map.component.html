@@ -1,28 +1,29 @@
 <mat-drawer-container class="drawer-container">
-  <div id="map">
-    <div class="map-buttons">
-      <button
-        mat-raised-button
-        *ngIf="markers.length > 0"
-        class="remove-marker"
-        (click)="removeAllMarkers()"
-      >
-        Remove Markers
-      </button>
-      <button
-        mat-raised-button
-        *ngIf="markers.length > 0"
-        class="open-btn"
-        (click)="openInDrawer()"
-      >
-        Open In Side Panel
-      </button>
+  <mat-drawer-content>
+    <div id="map">
+      <div class="map-buttons">
+        <button
+          mat-raised-button
+          *ngIf="markers.length > 0"
+          class="remove-marker"
+          (click)="removeAllMarkers()"
+        >
+          Remove Markers
+        </button>
+        <button
+          mat-raised-button
+          *ngIf="markers.length > 0"
+          class="open-btn"
+          (click)="openInDrawer()"
+        >
+          Open In Side Panel
+        </button>
+      </div>
     </div>
-  </div>
 
-  <div appPopupHost></div>
-
-  <mat-drawer #drawer class="map-drawer" opened="false" mode="over">
+    <div appPopupHost></div>
+  </mat-drawer-content>
+  <mat-drawer #drawer class="map-drawer" mode="over">
     <app-map-drawer [markers]="markers"></app-map-drawer>
   </mat-drawer>
 </mat-drawer-container>

@@ -1,21 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing'
 
-import { MapDrawerComponent } from './map-drawer.component';
+import {MapDrawerComponent} from './map-drawer.component'
 
 describe('MapDrawerComponent', () => {
-  let component: MapDrawerComponent;
-  let fixture: ComponentFixture<MapDrawerComponent>;
+  let component: MapDrawerComponent
+  let fixture: ComponentFixture<MapDrawerComponent>
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MapDrawerComponent]
-    });
-    fixture = TestBed.createComponent(MapDrawerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+      declarations: [MapDrawerComponent],
+    })
+    fixture = TestBed.createComponent(MapDrawerComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

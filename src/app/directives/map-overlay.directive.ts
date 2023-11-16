@@ -1,8 +1,8 @@
 import {Directive, ViewContainerRef} from '@angular/core'
 
 @Directive({
-  selector: '[appPopupHost]',
+  selector: '[appMapOverlay]',
 })
-export class PopupHostDirective {
+export class MapOverlayDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
