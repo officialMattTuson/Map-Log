@@ -1,21 +1,21 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing'
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {WorldMapComponent} from './world-map.component'
+import {WorldMapComponent} from './world-map.component';
 
 describe('WorldMapComponent', () => {
-  let component: WorldMapComponent
-  let fixture: ComponentFixture<WorldMapComponent>
+  let component: WorldMapComponent;
+  let fixture: ComponentFixture<WorldMapComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [WorldMapComponent],
-    })
-    fixture = TestBed.createComponent(WorldMapComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    });
+    fixture = TestBed.createComponent(WorldMapComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

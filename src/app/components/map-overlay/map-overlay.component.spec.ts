@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MapOverlayComponent } from './map-overlay.component';
+import {MapOverlayComponent} from './map-overlay.component';
 
 describe('MapOverlayComponent', () => {
   let component: MapOverlayComponent;
@@ -8,7 +8,7 @@ describe('MapOverlayComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MapOverlayComponent]
+      declarations: [MapOverlayComponent],
     });
     fixture = TestBed.createComponent(MapOverlayComponent);
     component = fixture.componentInstance;
