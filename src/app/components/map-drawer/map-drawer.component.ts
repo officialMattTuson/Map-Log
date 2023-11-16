@@ -33,12 +33,19 @@ export class MapDrawerComponent implements OnInit {
         .pipe(take(1))
         .subscribe({
           next: (result: any) => {
+            let conditionMet = false;
             result.features.forEach((feature: any) => {
-              if (feature.place_type[0] === 'locality') {
+              if (!conditionMet && feature.place_type[0] === 'locality') {
                 this.selectedLocations.push(feature.place_name);
+                conditionMet = true;
+              } else if (!conditionMet && feature.place_type[0] === 'place') {
+                this.selectedLocations.push(feature.place_name);
+                conditionMet = true;
+              } else if (!conditionMet && feature.place_type[0] === 'region') {
+                this.selectedLocations.push(feature.place_name);
+                conditionMet = true;
               }
             });
-            console.log(this.selectedLocations);
           },
         });
     });

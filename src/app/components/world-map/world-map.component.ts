@@ -33,7 +33,7 @@ export class WorldMapComponent implements OnInit {
   overlayDirective: MapOverlayDirective;
 
   constructor(
-    private readonly componentFactoryResolver: ComponentFactoryResolver,
+    private readonly factoryResolver: ComponentFactoryResolver,
     private readonly mapOverlayService: MapOverlayService,
   ) {}
 
@@ -70,8 +70,6 @@ export class WorldMapComponent implements OnInit {
     this.setUpMapControls(map);
     this.setDefaultLocationMarker(map, coordinates);
     this.createMarker(map);
-    // Popup example, will be removed at a later stage
-    this.addAucklandPopup(map);
     this.searchGeocoder(map);
   }
 
@@ -121,14 +119,10 @@ export class WorldMapComponent implements OnInit {
         return markerScreenPoint.dist(map.project(event.lngLat)) < 45;
       });
       if (clickedMarker) {
-        const popupComponentFactory =
-          this.componentFactoryResolver.resolveComponentFactory(
-            MarkerPopupComponent,
-          );
+        const popupFactory =
+          this.factoryResolver.resolveComponentFactory(MarkerPopupComponent);
         const popupComponentRef =
-          this.popupHost.viewContainerRef.createComponent(
-            popupComponentFactory,
-          );
+          this.popupHost.viewContainerRef.createComponent(popupFactory);
         popupComponentRef.instance.title = this.selectedLocation.name;
         popupComponentRef.instance.description =
           this.selectedLocation.description;
@@ -229,13 +223,6 @@ export class WorldMapComponent implements OnInit {
     }
 
     return geoCodes;
-  }
-
-  addAucklandPopup(map: mapboxgl.Map) {
-    const popup = new mapboxgl.Popup({closeOnClick: false})
-      .setLngLat(this.aucklandCoordinates)
-      .setHTML('<h3>Auckland!</h3>')
-      .addTo(map);
   }
 
   removeAllMarkers() {
