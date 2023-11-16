@@ -18,7 +18,7 @@ import {MatInputModule} from '@angular/material/input'
 import {MatSidenavModule} from '@angular/material/sidenav'
 import {MapDrawerComponent} from './components/map-drawer/map-drawer.component'
 import {HttpClientModule} from '@angular/common/http'
-import {MapOverlayDirective} from './map-overlay.directive'
+import {MapOverlayDirective} from './directives/map-overlay.directive'
 
 @NgModule({
   declarations: [
