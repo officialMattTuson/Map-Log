@@ -6,7 +6,6 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {environment} from 'src/environments/environments';
 import {LngLatLike, MapMouseEvent} from 'mapbox-gl';
 import {PopupHostDirective} from 'src/app/directives/popup-host.directive';
 import {MarkerPopupComponent} from '../marker-popup/marker-popup.component';
@@ -14,6 +13,7 @@ import {MatDrawer} from '@angular/material/sidenav';
 import {MapOverlayService} from 'src/app/services/map-overlay.service';
 import {MapDrawerComponent} from '../map-drawer/map-drawer.component';
 import {MapOverlayDirective} from 'src/app/directives/map-overlay.directive';
+import {environment} from 'src/environments/environments';
 
 @Component({
   selector: 'app-world-map',

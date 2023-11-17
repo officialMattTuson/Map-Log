@@ -21,3 +21,16 @@
   right: 0.6rem;
   z-index: 100;
 }
+
+:host ::ng-deep {
+  .mat-drawer.map-drawer {
+    transform: translate3d(0, 100%, 0); 
+    height: 40vh; 
+    left: 0;
+    right: 0;
+    width: 100vw; 
+    top: auto; 
+    bottom: 0; 
+  }
+  
+}
