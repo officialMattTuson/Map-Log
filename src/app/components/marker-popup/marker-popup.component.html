@@ -1,3 +1,11 @@
-<h3>{{ title }}</h3>
-<p>{{ description }}</p>
-<button mat-stroked-button color="primary">Hello</button>
+<h3>{{ location }}</h3>
+
+<button
+  *ngIf="placeMarkerConfirmationPopup"
+  id="placeMarker"
+  mat-stroked-button
+  color="primary"
+  (click)="onPlaceMarker()"
+>
+  Place Marker
+</button>

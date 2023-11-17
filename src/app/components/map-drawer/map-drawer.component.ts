@@ -3,6 +3,7 @@ import {LngLat, Marker} from 'mapbox-gl';
 import {take} from 'rxjs';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
 import {MapOverlayService} from 'src/app/services/map-overlay.service';
+import {SharedMapService} from 'src/app/services/shared-map.service';
 
 @Component({
   selector: 'app-map-drawer',
@@ -12,6 +13,7 @@ import {MapOverlayService} from 'src/app/services/map-overlay.service';
 export class MapDrawerComponent implements OnInit {
   constructor(
     private readonly geocoderService: GeocoderService,
+    private readonly sharedMapService: SharedMapService,
     private readonly mapOverlayService: MapOverlayService,
   ) {}
   markers: Marker[];
@@ -32,21 +34,9 @@ export class MapDrawerComponent implements OnInit {
         .getFeaturesFromCoordinates(coordsSet)
         .pipe(take(1))
         .subscribe({
-          next: (result: any) => {
-            let conditionMet = false;
-            result.features.forEach((feature: any) => {
-              if (!conditionMet && feature.place_type[0] === 'locality') {
-                this.selectedLocations.push(feature.place_name);
-                conditionMet = true;
-              } else if (!conditionMet && feature.place_type[0] === 'place') {
-                this.selectedLocations.push(feature.place_name);
-                conditionMet = true;
-              } else if (!conditionMet && feature.place_type[0] === 'region') {
-                this.selectedLocations.push(feature.place_name);
-                conditionMet = true;
-              }
-            });
-          },
+          next: (result: any) =>
+            (this.selectedLocations =
+              this.sharedMapService.getLocationDetails(result)),
         });
     });
   }

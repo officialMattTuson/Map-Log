@@ -6,8 +6,8 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
   styleUrls: ['./marker-popup.component.scss'],
 })
 export class MarkerPopupComponent {
-  @Input() title: string;
-  @Input() description: string;
+  @Input() location: string;
+  @Input() placeMarkerConfirmationPopup: boolean;
   @Output() placeMarkerClicked = new EventEmitter<void>();
 
   onPlaceMarker() {
