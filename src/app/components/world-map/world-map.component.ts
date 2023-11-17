@@ -94,48 +94,52 @@ export class WorldMapComponent implements OnInit {
   }
 
   createMarker(map: mapboxgl.Map) {
-    let popupComponentRef: ComponentRef<MarkerPopupComponent>;
-    map.on('click', (event: MapMouseEvent) => {
-      const coordinates = event.lngLat.toArray();
+  map.on('click', (event: MapMouseEvent) => {
+    const coordinates = event.lngLat.toArray();
 
-      this.getLocationInfoAtCoordinates(coordinates).subscribe({
-        next: (locationInfo: any) => {
-          this.selectedLocation = locationInfo;
+    this.getLocationInfoAtCoordinates(coordinates).subscribe({
+      next: (locationInfo: any) => {
+        this.selectedLocation = locationInfo;
 
-          const clickedMarker = this.markers.find(marker => {
-            const markerScreenPoint = map.project(marker.getLngLat());
-            return markerScreenPoint.dist(map.project(event.lngLat)) < 45;
-          });
-          const popupFactory =
-            this.factoryResolver.resolveComponentFactory(MarkerPopupComponent);
-          if (clickedMarker) {
-            popupComponentRef =
-              this.popupHost.viewContainerRef.createComponent(popupFactory);
-            popupComponentRef.instance.location = this.selectedLocation;
-            const markerScreenPoint = map.project(clickedMarker.getLngLat());
-            const popupLngLat = map.unproject(
-              markerScreenPoint.add(new mapboxgl.Point(0, -40)),
-            );
+        const clickedMarker = this.findMarkerByCoordinates(map, event.lngLat);
+        const popupFactory = this.factoryResolver.resolveComponentFactory(MarkerPopupComponent);
 
-            new mapboxgl.Popup()
-              .setLngLat(popupLngLat)
-              .setDOMContent(popupComponentRef.location.nativeElement)
-              .addTo(map);
-            return;
-          }
-          popupComponentRef =
-            this.popupHost.viewContainerRef.createComponent(popupFactory);
-          popupComponentRef.instance.location = this.selectedLocation;
-          const popup = new mapboxgl.Popup({closeOnClick: true})
+        const popupComponentRef = this.popupHost.viewContainerRef.createComponent(popupFactory);
+        popupComponentRef.instance.location = this.selectedLocation;
+
+        let popup: mapboxgl.Popup;
+        if (clickedMarker) {
+          const markerScreenPoint = map.project(clickedMarker.getLngLat());
+          const popupLngLat = map.unproject(markerScreenPoint.add(new mapboxgl.Point(0, -40)));
+
+          popup = new mapboxgl.Popup()
+            .setLngLat(popupLngLat)
+            .setDOMContent(popupComponentRef.location.nativeElement)
+            .addTo(map);
+        } else {
+          popup = new mapboxgl.Popup({ closeOnClick: true })
             .setLngLat(event.lngLat)
             .setDOMContent(popupComponentRef.location.nativeElement)
             .addTo(map);
+
           popupComponentRef.instance.placeMarkerConfirmationPopup = true;
           popupComponentRef.instance.placeMarkerClicked.subscribe({
             next: () => this.handleMarkerPlacedEvent(popup, event, map),
           });
-        },
-      });
+        }
+      },
+    });
+  });
+}
+
+
+  findMarkerByCoordinates(
+    map: mapboxgl.Map,
+    lngLat: mapboxgl.LngLat,
+  ): mapboxgl.Marker | undefined {
+    return this.markers.find(marker => {
+      const markerScreenPoint = map.project(marker.getLngLat());
+      return markerScreenPoint.dist(map.project(lngLat)) < 45;
     });
   }
 

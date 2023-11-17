@@ -19,8 +19,13 @@ export class MapDrawerComponent implements OnInit {
   markers: Marker[];
   mappedMarkers: LngLat[];
   selectedLocations: any[] = [];
+  locationDescription: string;
 
   ngOnInit() {
+    if (this.locationDescription) {
+      this.selectedLocations.push(this.locationDescription);
+      return;
+    }
     this.mappedMarkers = this.markers.map(marker => marker.getLngLat());
     this.getFeatures();
   }

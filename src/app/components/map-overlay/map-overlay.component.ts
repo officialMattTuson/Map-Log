@@ -11,6 +11,7 @@ import {MapOverlayService} from 'src/app/services/map-overlay.service';
 })
 export class MapOverlayComponent {
   @Input() data: any;
+  @Input() placeMarkerLocationDescription: string;
 
   mapOverlayComponentRef: ComponentRef<MapDrawerComponent>;
   overlayHeader: string;
@@ -24,11 +25,15 @@ export class MapOverlayComponent {
   createMapOverlayComponent(
     overlayComponent: Type<MapDrawerComponent>,
     data: any,
+    locationDescription?: string
   ) {
     const containerRef = this.mapOverlayDirective.viewContainerRef;
     this.mapOverlayComponentRef =
       containerRef.createComponent<MapDrawerComponent>(overlayComponent);
     this.mapOverlayComponentRef.instance.markers = data;
+    if (locationDescription) {
+      this.mapOverlayComponentRef.instance.locationDescription = locationDescription;
+    }
   }
 
   closeOverlay() {

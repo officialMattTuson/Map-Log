@@ -24,13 +24,30 @@
 
 :host ::ng-deep {
   .mat-drawer.map-drawer {
-    transform: translate3d(0, 100%, 0); 
-    height: 40vh; 
+    transform: translate3d(0, 100%, 0);
+    height: 40vh;
     left: 0;
     right: 0;
-    width: 100vw; 
-    top: auto; 
-    bottom: 0; 
+    width: 100vw;
+    top: auto;
+    bottom: 0;
   }
-  
+  .mapboxgl-popup-content {
+    padding: 0;
+    border-radius: 50%;
+    border: 5px solid black;
+    width: 12rem;
+    height: 12rem;
+    background-color: antiquewhite;
+  }
+
+  .mapboxgl-popup-close-button {
+    color: white;
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+    position: relative;
+    top: -105%;
+    left: 95%;
+  }
 }
