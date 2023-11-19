@@ -1,5 +1,6 @@
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {Component, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LngLat, Marker} from 'mapbox-gl';
 import {take} from 'rxjs';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
@@ -12,24 +13,35 @@ import {SharedMapService} from 'src/app/services/shared-map.service';
   styleUrls: ['./map-drawer.component.scss'],
 })
 export class MapDrawerComponent implements OnInit {
-  constructor(
-    private readonly geocoderService: GeocoderService,
-    private readonly sharedMapService: SharedMapService,
-    private readonly mapOverlayService: MapOverlayService,
-  ) {}
+  form: FormGroup;
   markers: Marker[];
   mappedMarkers: LngLat[];
   selectedLocation: string;
   locationDescription: string;
+  hasSubmitted: boolean;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
+  constructor(
+    private readonly geocoderService: GeocoderService,
+    private readonly sharedMapService: SharedMapService,
+    private readonly mapOverlayService: MapOverlayService,
+    protected formBuilder: FormBuilder,
+  ) {}
+
   ngOnInit() {
+    this.createForm();
     if (this.locationDescription) {
       this.selectedLocation = this.locationDescription;
       return;
     }
     this.mappedMarkers = this.markers.map(marker => marker.getLngLat());
     this.getFeatures();
+  }
+
+  createForm() {
+    this.form = this.formBuilder.group({
+      locationStory: ['', Validators.required],
+    });
   }
 
   getFeatures() {
@@ -46,6 +58,11 @@ export class MapDrawerComponent implements OnInit {
               this.sharedMapService.getLocationDetails(result)),
         });
     });
+  }
+
+  addLocationStory() {
+    this.hasSubmitted = true;
+    console.log(this.form.value);
   }
 
   closeOverlay() {

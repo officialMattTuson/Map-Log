@@ -20,6 +20,7 @@ import {MapDrawerComponent} from './components/map-drawer/map-drawer.component';
 import {HttpClientModule} from '@angular/common/http';
 import {MapOverlayDirective} from './directives/map-overlay.directive';
 import {MapOverlayComponent} from './components/map-overlay/map-overlay.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,7 @@ import {MapOverlayComponent} from './components/map-overlay/map-overlay.componen
     MatCheckboxModule,
     MatInputModule,
     MatSidenavModule,
-    
+    ReactiveFormsModule
   ],
   exports: [
     BrowserModule,
@@ -58,6 +59,7 @@ import {MapOverlayComponent} from './components/map-overlay/map-overlay.componen
     MatCheckboxModule,
     MatInputModule,
     MatSidenavModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
