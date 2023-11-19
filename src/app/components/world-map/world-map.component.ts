@@ -3,7 +3,6 @@ import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import {
   Component,
   ComponentFactoryResolver,
-  ComponentRef,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -12,7 +11,6 @@ import {PopupHostDirective} from 'src/app/directives/popup-host.directive';
 import {MarkerPopupComponent} from '../marker-popup/marker-popup.component';
 import {MatDrawer} from '@angular/material/sidenav';
 import {MapOverlayService} from 'src/app/services/map-overlay.service';
-import {MapDrawerComponent} from '../map-drawer/map-drawer.component';
 import {MapOverlayDirective} from 'src/app/directives/map-overlay.directive';
 import {environment} from 'src/environments/environments';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
@@ -225,9 +223,5 @@ export class WorldMapComponent implements OnInit {
   removeAllMarkers() {
     this.markers.forEach(marker => marker.remove());
     this.markers = [];
-  }
-
-  openOverlay() {
-    this.mapOverlayService.openPanel(MapDrawerComponent, this.markers);
   }
 }

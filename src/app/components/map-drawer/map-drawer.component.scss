@@ -1,0 +1,25 @@
+.drawer-container {
+  height: 35vh;
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  gap: 3rem;
+  border-top: 4px solid red;
+}
+
+:host ::ng-deep {
+  .mat-mdc-form-field {
+    width: 80%;
+    height: 70%;
+    border: 7px solid darkcyan;
+    border-radius: 1rem;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper,
+  .mat-mdc-form-field-bottom-align::before {
+    display: none;
+  }
+
+  #mat-input-0 {
+    height: 10rem;
+  }
+}

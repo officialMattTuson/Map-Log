@@ -1,3 +1,7 @@
 {
-  "cSpell.words": ["mapbox", "unproject"]
+  "cSpell.words": [
+    "mapbox",
+    "mapboxgl",
+    "unproject"
+  ]
 }

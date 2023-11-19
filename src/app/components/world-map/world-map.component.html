@@ -11,24 +11,15 @@
   </mat-drawer>
   <mat-drawer-content>
     <div id="map">
-      <div class="map-buttons">
-        <button
-          mat-raised-button
-          *ngIf="markers.length > 0"
-          class="remove-marker"
-          (click)="removeAllMarkers()"
-        >
-          Remove Markers
-        </button>
-        <button
-          mat-raised-button
-          *ngIf="markers.length > 0"
-          class="open-btn"
-          (click)="openOverlay()"
-        >
-          Open In Side Panel
-        </button>
-      </div>
+      <button
+        mat-raised-button
+        color="accent"
+        *ngIf="markers.length > 0"
+        class="remove-marker"
+        (click)="removeAllMarkers()"
+      >
+        Clear Markers
+      </button>
     </div>
 
     <div appPopupHost></div>

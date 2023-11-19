@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {LngLat, Marker} from 'mapbox-gl';
 import {take} from 'rxjs';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
@@ -18,12 +19,13 @@ export class MapDrawerComponent implements OnInit {
   ) {}
   markers: Marker[];
   mappedMarkers: LngLat[];
-  selectedLocations: any[] = [];
+  selectedLocation: string;
   locationDescription: string;
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   ngOnInit() {
     if (this.locationDescription) {
-      this.selectedLocations.push(this.locationDescription);
+      this.selectedLocation = this.locationDescription;
       return;
     }
     this.mappedMarkers = this.markers.map(marker => marker.getLngLat());
@@ -40,7 +42,7 @@ export class MapDrawerComponent implements OnInit {
         .pipe(take(1))
         .subscribe({
           next: (result: any) =>
-            (this.selectedLocations =
+            (this.selectedLocation =
               this.sharedMapService.getLocationDetails(result)),
         });
     });
