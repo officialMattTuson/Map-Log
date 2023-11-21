@@ -3,6 +3,7 @@ import {MapDrawerComponent} from '../map-drawer/map-drawer.component';
 import {MapOverlayDirective} from 'src/app/directives/map-overlay.directive';
 import {Subject} from 'rxjs';
 import {MapOverlayService} from 'src/app/services/map-overlay.service';
+import { StoryMarker } from 'src/app/models.ts/marker';
 
 @Component({
   selector: 'app-map-overlay',
@@ -10,7 +11,7 @@ import {MapOverlayService} from 'src/app/services/map-overlay.service';
   styleUrls: ['./map-overlay.component.scss'],
 })
 export class MapOverlayComponent {
-  @Input() data: any;
+  @Input() storyMarker: StoryMarker;
   @Input() placeMarkerLocationDescription: string;
 
   mapOverlayComponentRef: ComponentRef<MapDrawerComponent>;
@@ -24,13 +25,13 @@ export class MapOverlayComponent {
 
   createMapOverlayComponent(
     overlayComponent: Type<MapDrawerComponent>,
-    data: any,
+    storyMarker: StoryMarker,
     locationDescription?: string
   ) {
     const containerRef = this.mapOverlayDirective.viewContainerRef;
     this.mapOverlayComponentRef =
       containerRef.createComponent<MapDrawerComponent>(overlayComponent);
-    this.mapOverlayComponentRef.instance.markers = data;
+    this.mapOverlayComponentRef.instance.storyMarker = storyMarker;
     if (locationDescription) {
       this.mapOverlayComponentRef.instance.locationDescription = locationDescription;
     }

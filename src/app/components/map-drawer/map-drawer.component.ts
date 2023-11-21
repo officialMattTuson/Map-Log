@@ -1,9 +1,8 @@
-import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {LngLat, Marker} from 'mapbox-gl';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, Validators} from '@angular/forms';
 import {take} from 'rxjs';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
+import {StoryMarker} from 'src/app/models.ts/marker';
 import {MapOverlayService} from 'src/app/services/map-overlay.service';
 import {SharedMapService} from 'src/app/services/shared-map.service';
 
@@ -13,19 +12,16 @@ import {SharedMapService} from 'src/app/services/shared-map.service';
   styleUrls: ['./map-drawer.component.scss'],
 })
 export class MapDrawerComponent implements OnInit {
-  form: FormGroup;
-  markers: Marker[];
-  mappedMarkers: LngLat[];
+  storyMarker: StoryMarker;
   selectedLocation: string;
   locationDescription: string;
-  hasSubmitted: boolean;
-  @ViewChild('autosize') autosize: CdkTextareaAutosize;
+  hasFailedSubmitAttempt: boolean;
+  storyControl: FormControl;
 
   constructor(
     private readonly geocoderService: GeocoderService,
     private readonly sharedMapService: SharedMapService,
     private readonly mapOverlayService: MapOverlayService,
-    protected formBuilder: FormBuilder,
   ) {}
 
   ngOnInit() {
@@ -34,35 +30,36 @@ export class MapDrawerComponent implements OnInit {
       this.selectedLocation = this.locationDescription;
       return;
     }
-    this.mappedMarkers = this.markers.map(marker => marker.getLngLat());
-    this.getFeatures();
+    const coordinates = this.storyMarker.marker.getLngLat();
+    const mappedCoords = [coordinates.lng, coordinates.lat];
+    this.getFeatures(mappedCoords);
   }
 
   createForm() {
-    this.form = this.formBuilder.group({
-      locationStory: ['', Validators.required],
-    });
+    this.storyControl = new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+    ]);
   }
 
-  getFeatures() {
-    const convertedCoordinates: number[][] = this.mappedMarkers.map(
-      ({lng, lat}) => [lng, lat],
-    );
-    convertedCoordinates.forEach(coordsSet => {
-      this.geocoderService
-        .getFeaturesFromCoordinates(coordsSet)
-        .pipe(take(1))
-        .subscribe({
-          next: (result: any) =>
-            (this.selectedLocation =
-              this.sharedMapService.getLocationDetails(result)),
-        });
-    });
+  getFeatures(coordinates: number[]) {
+    this.geocoderService
+      .getFeaturesFromCoordinates(coordinates)
+      .pipe(take(1))
+      .subscribe({
+        next: (result: any) =>
+          (this.selectedLocation =
+            this.sharedMapService.getLocationDetails(result)),
+      });
   }
 
   addLocationStory() {
-    this.hasSubmitted = true;
-    console.log(this.form.value);
+    this.hasFailedSubmitAttempt = this.storyControl.invalid;
+    if (this.storyControl.invalid) {
+      this.storyControl.markAsTouched();
+      return;
+    }
+    this.storyMarker.story = this.storyControl.value;
   }
 
   closeOverlay() {

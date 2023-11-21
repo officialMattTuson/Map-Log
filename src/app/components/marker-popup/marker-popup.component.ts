@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import { MapOverlayService } from 'src/app/services/map-overlay.service';
-import { MapDrawerComponent } from '../map-drawer/map-drawer.component';
+import {MapOverlayService} from 'src/app/services/map-overlay.service';
+import {MapDrawerComponent} from '../map-drawer/map-drawer.component';
+import {StoryMarker} from 'src/app/models.ts/marker';
 
 @Component({
   selector: 'app-marker-popup',
@@ -9,6 +10,7 @@ import { MapDrawerComponent } from '../map-drawer/map-drawer.component';
 })
 export class MarkerPopupComponent {
   @Input() location: string;
+  @Input() selectedStoryMarker: StoryMarker;
   @Input() placeMarkerConfirmationPopup: boolean;
   @Output() placeMarkerClicked = new EventEmitter<void>();
 
@@ -18,6 +20,10 @@ export class MarkerPopupComponent {
   }
 
   openOverlay() {
-    this.mapOverlayService.openPanel(MapDrawerComponent, null, this.location);
+    this.mapOverlayService.openPanel(
+      MapDrawerComponent,
+      this.selectedStoryMarker,
+      this.location,
+    );
   }
 }

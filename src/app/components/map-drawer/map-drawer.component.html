@@ -2,31 +2,25 @@
   <div class="drawer-container__title-block">
     <h3 id="location-title">{{ selectedLocation }}</h3>
   </div>
-  <form [formGroup]="form" (ngSubmit)="addLocationStory()">
-    <div class="drawer-container__description-block">
-      <!-- <h3 id="location-description">{{ selectedLocation }}</h3> -->
-      <mat-form-field appearance="fill">
-        <textarea
-          matInput
-          mat-autosize
-          formControlName="locationStory"
-          maxlength="300"
-          matInput
-          cdkTextareaAutosize
-          #autosize="cdkTextareaAutosize"
-          cdkAutosizeMinRows="1"
-          cdkAutosizeMaxRows="5"
-          placeholder="What did you do here?"
-        ></textarea>
-      </mat-form-field>
-      <button
-        mat-raised-button
-        type="submit"
-        class="submit-btn"
-        color="primary"
-      >
-        Add Story
-      </button>
-    </div>
-  </form>
+  <div class="drawer-container__description-block">
+    <mat-form-field appearance="fill">
+      <textarea
+        matInput
+        [formControl]="storyControl"
+        maxlength="300"
+        placeholder="What did you do here?"
+      ></textarea>
+    </mat-form-field>
+    <mat-error *ngIf="hasFailedSubmitAttempt"
+      >Please complete your story before submitting
+    </mat-error>
+    <button
+      mat-raised-button
+      (click)="addLocationStory()"
+      class="submit-btn"
+      color="primary"
+    >
+      Add Story
+    </button>
+  </div>
 </div>

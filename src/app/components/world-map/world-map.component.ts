@@ -16,6 +16,7 @@ import {environment} from 'src/environments/environments';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
 import {Observable, map, take} from 'rxjs';
 import {SharedMapService} from 'src/app/services/shared-map.service';
+import {StoryMarker} from 'src/app/models.ts/marker';
 
 @Component({
   selector: 'app-world-map',
@@ -23,7 +24,7 @@ import {SharedMapService} from 'src/app/services/shared-map.service';
   styleUrls: ['./world-map.component.scss'],
 })
 export class WorldMapComponent implements OnInit {
-  public markers: mapboxgl.Marker[] = [];
+  public storyMarkers: StoryMarker[] = [];
   public aucklandCoordinates: LngLatLike = [174.7645, -36.8509];
   public selectedLocation: string;
 
@@ -71,9 +72,9 @@ export class WorldMapComponent implements OnInit {
       zoom: 10,
     });
 
+    this.searchGeocoder(map);
     this.setUpMapControls(map);
     this.createMarker(map);
-    this.searchGeocoder(map);
   }
 
   setUpMapControls(map: mapboxgl.Map) {
@@ -81,62 +82,62 @@ export class WorldMapComponent implements OnInit {
       maxWidth: 200,
       unit: 'metric',
     });
-    const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
-    });
     map.addControl(scale, 'bottom-right');
-    map.addControl(geocoder, 'top-right');
     map.addControl(new mapboxgl.NavigationControl());
     map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
   }
 
   createMarker(map: mapboxgl.Map) {
-  map.on('click', (event: MapMouseEvent) => {
-    const coordinates = event.lngLat.toArray();
+    map.on('click', (event: MapMouseEvent) => {
+      const coordinates = event.lngLat.toArray();
 
-    this.getLocationInfoAtCoordinates(coordinates).subscribe({
-      next: (locationInfo: any) => {
-        this.selectedLocation = locationInfo;
+      this.getLocationInfoAtCoordinates(coordinates).subscribe({
+        next: (locationInfo: any) => {
+          this.selectedLocation = locationInfo;
 
-        const clickedMarker = this.findMarkerByCoordinates(map, event.lngLat);
-        const popupFactory = this.factoryResolver.resolveComponentFactory(MarkerPopupComponent);
+          const clickedMarker = this.findMarkerByCoordinates(map, event.lngLat);
+          const popupFactory =
+            this.factoryResolver.resolveComponentFactory(MarkerPopupComponent);
 
-        const popupComponentRef = this.popupHost.viewContainerRef.createComponent(popupFactory);
-        popupComponentRef.instance.location = this.selectedLocation;
+          const popupComponentRef =
+            this.popupHost.viewContainerRef.createComponent(popupFactory);
+          popupComponentRef.instance.location = this.selectedLocation;
+          let popup: mapboxgl.Popup;
+          if (clickedMarker) {
+            popupComponentRef.instance.selectedStoryMarker = clickedMarker;
+            const markerScreenPoint = map.project(
+              clickedMarker.marker.getLngLat(),
+            );
+            const popupLngLat = map.unproject(
+              markerScreenPoint.add(new mapboxgl.Point(0, -40)),
+            );
 
-        let popup: mapboxgl.Popup;
-        if (clickedMarker) {
-          const markerScreenPoint = map.project(clickedMarker.getLngLat());
-          const popupLngLat = map.unproject(markerScreenPoint.add(new mapboxgl.Point(0, -40)));
+            popup = new mapboxgl.Popup()
+              .setLngLat(popupLngLat)
+              .setDOMContent(popupComponentRef.location.nativeElement)
+              .addTo(map);
+          } else {
+            popup = new mapboxgl.Popup({closeOnClick: true})
+              .setLngLat(event.lngLat)
+              .setDOMContent(popupComponentRef.location.nativeElement)
+              .addTo(map);
 
-          popup = new mapboxgl.Popup()
-            .setLngLat(popupLngLat)
-            .setDOMContent(popupComponentRef.location.nativeElement)
-            .addTo(map);
-        } else {
-          popup = new mapboxgl.Popup({ closeOnClick: true })
-            .setLngLat(event.lngLat)
-            .setDOMContent(popupComponentRef.location.nativeElement)
-            .addTo(map);
-
-          popupComponentRef.instance.placeMarkerConfirmationPopup = true;
-          popupComponentRef.instance.placeMarkerClicked.subscribe({
-            next: () => this.handleMarkerPlacedEvent(popup, event, map),
-          });
-        }
-      },
+            popupComponentRef.instance.placeMarkerConfirmationPopup = true;
+            popupComponentRef.instance.placeMarkerClicked.subscribe({
+              next: () => this.handleMarkerPlacedEvent(popup, event, map),
+            });
+          }
+        },
+      });
     });
-  });
-}
-
+  }
 
   findMarkerByCoordinates(
     map: mapboxgl.Map,
     lngLat: mapboxgl.LngLat,
-  ): mapboxgl.Marker | undefined {
-    return this.markers.find(marker => {
-      const markerScreenPoint = map.project(marker.getLngLat());
+  ): StoryMarker | undefined {
+    return this.storyMarkers.find(storyMarker => {
+      const markerScreenPoint = map.project(storyMarker.marker.getLngLat());
       return markerScreenPoint.dist(map.project(lngLat)) < 45;
     });
   }
@@ -151,7 +152,8 @@ export class WorldMapComponent implements OnInit {
         .setLngLat(event.lngLat)
         .addTo(map);
       popup.remove();
-      this.markers = [...this.markers, marker];
+      const newStoryMarker: StoryMarker = {marker: marker, story: ''};
+      this.storyMarkers = [...this.storyMarkers, newStoryMarker];
     });
   }
 
@@ -170,7 +172,7 @@ export class WorldMapComponent implements OnInit {
         accessToken: mapboxgl.accessToken,
         localGeocoder: (query: string) => this.coordinatesGeocoder(query),
         zoom: 10,
-        placeholder: 'Search By Coords (Long, Lat)',
+        placeholder: 'Search By Coords or Location',
         mapboxgl: mapboxgl,
         reverseGeocode: true,
       }),
@@ -221,7 +223,7 @@ export class WorldMapComponent implements OnInit {
   }
 
   removeAllMarkers() {
-    this.markers.forEach(marker => marker.remove());
-    this.markers = [];
+    this.storyMarkers.forEach(storyMarker => storyMarker.marker.remove());
+    this.storyMarkers = [];
   }
 }
