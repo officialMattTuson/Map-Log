@@ -1,17 +1,46 @@
+<h3 id="location-title">{{ selectedLocation }}</h3>
 <div class="drawer-container">
   <div class="drawer-container__title-block">
-    <h3 id="location-title">{{ selectedLocation }}</h3>
+    <button
+      id="add-photo-btn"
+      mat-stroked-button
+      color="primary"
+      (click)="uploadPhoto()"
+    >
+      <mat-icon id="photo-icon">add_a_photo</mat-icon>
+      Upload Photo
+    </button>
+
+    <mat-form-field>
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate placeholder="Start date" />
+        <input matEndDate placeholder="End date" />
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
   </div>
   <div class="drawer-container__description-block">
     <ng-container *ngIf="!hasExistingStory; else viewBlock">
       <mat-form-field appearance="fill">
         <textarea
+          id="textarea"
           matInput
           [formControl]="storyControl"
-          maxlength="300"
           placeholder="What did you do here?"
+          maxlength="300"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="1"
+          cdkAutosizeMaxRows="5"
         ></textarea>
       </mat-form-field>
+      <mat-hint>{{ storyControl.value.length + ' / 300' }}</mat-hint>
       <mat-error *ngIf="hasFailedSubmitAttempt"
         >Please complete your story before submitting
       </mat-error>

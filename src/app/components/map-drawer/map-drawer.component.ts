@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {take} from 'rxjs';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
@@ -18,6 +19,9 @@ export class MapDrawerComponent implements OnInit {
   hasFailedSubmitAttempt: boolean;
   hasExistingStory = false;
   storyControl: FormControl;
+  selectedDateControl: FormControl;
+
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   constructor(
     private readonly geocoderService: GeocoderService,
@@ -42,6 +46,7 @@ export class MapDrawerComponent implements OnInit {
       this.storyMarker.story.length === 0 ? this.storyMarker.story : '',
       [Validators.required, Validators.minLength(3)],
     );
+    this.selectedDateControl = new FormControl(null, Validators.required);
   }
 
   getFeatures(coordinates: number[]) {
@@ -67,6 +72,10 @@ export class MapDrawerComponent implements OnInit {
 
   updateStory() {
     this.hasExistingStory = false;
+  }
+
+  uploadPhoto() {
+    console.log('Future Integration');
   }
 
   closeOverlay() {

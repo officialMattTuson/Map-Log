@@ -14,6 +14,8 @@ import {MatCardModule} from '@angular/material/card';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MapDrawerComponent} from './components/map-drawer/map-drawer.component';
@@ -45,7 +47,9 @@ import {ReactiveFormsModule} from '@angular/forms';
     MatCheckboxModule,
     MatInputModule,
     MatSidenavModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     BrowserModule,
@@ -59,7 +63,9 @@ import {ReactiveFormsModule} from '@angular/forms';
     MatCheckboxModule,
     MatInputModule,
     MatSidenavModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [],
   bootstrap: [AppComponent],
