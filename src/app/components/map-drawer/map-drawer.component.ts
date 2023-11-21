@@ -16,6 +16,7 @@ export class MapDrawerComponent implements OnInit {
   selectedLocation: string;
   locationDescription: string;
   hasFailedSubmitAttempt: boolean;
+  hasExistingStory = false;
   storyControl: FormControl;
 
   constructor(
@@ -25,6 +26,7 @@ export class MapDrawerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.hasExistingStory = this.storyMarker.story.length > 0;
     this.createForm();
     if (this.locationDescription) {
       this.selectedLocation = this.locationDescription;
@@ -36,10 +38,10 @@ export class MapDrawerComponent implements OnInit {
   }
 
   createForm() {
-    this.storyControl = new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-    ]);
+    this.storyControl = new FormControl(
+      this.storyMarker.story.length === 0 ? this.storyMarker.story : '',
+      [Validators.required, Validators.minLength(3)],
+    );
   }
 
   getFeatures(coordinates: number[]) {
@@ -60,6 +62,11 @@ export class MapDrawerComponent implements OnInit {
       return;
     }
     this.storyMarker.story = this.storyControl.value;
+    this.hasExistingStory = true;
+  }
+
+  updateStory() {
+    this.hasExistingStory = false;
   }
 
   closeOverlay() {

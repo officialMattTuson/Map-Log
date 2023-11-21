@@ -3,24 +3,38 @@
     <h3 id="location-title">{{ selectedLocation }}</h3>
   </div>
   <div class="drawer-container__description-block">
-    <mat-form-field appearance="fill">
-      <textarea
-        matInput
-        [formControl]="storyControl"
-        maxlength="300"
-        placeholder="What did you do here?"
-      ></textarea>
-    </mat-form-field>
-    <mat-error *ngIf="hasFailedSubmitAttempt"
-      >Please complete your story before submitting
-    </mat-error>
-    <button
-      mat-raised-button
-      (click)="addLocationStory()"
-      class="submit-btn"
-      color="primary"
-    >
-      Add Story
-    </button>
+    <ng-container *ngIf="!hasExistingStory; else viewBlock">
+      <mat-form-field appearance="fill">
+        <textarea
+          matInput
+          [formControl]="storyControl"
+          maxlength="300"
+          placeholder="What did you do here?"
+        ></textarea>
+      </mat-form-field>
+      <mat-error *ngIf="hasFailedSubmitAttempt"
+        >Please complete your story before submitting
+      </mat-error>
+      <button
+        mat-raised-button
+        (click)="addLocationStory()"
+        class="submit-btn"
+        color="primary"
+      >
+        Add Story
+      </button>
+    </ng-container>
   </div>
 </div>
+
+<ng-template #viewBlock>
+  <p id="story">{{ storyMarker.story }}</p>
+  <button
+    mat-raised-button
+    (click)="updateStory()"
+    class="submit-btn"
+    color="primary"
+  >
+    Update Story
+  </button>
+</ng-template>
