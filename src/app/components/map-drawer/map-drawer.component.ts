@@ -13,15 +13,19 @@ import {SharedMapService} from 'src/app/services/shared-map.service';
   styleUrls: ['./map-drawer.component.scss'],
 })
 export class MapDrawerComponent implements OnInit {
-  form: FormGroup;
   storyMarker: StoryMarker;
+  
   selectedLocation: string;
   locationDescription: string;
+  
   hasFailedSubmitAttempt: boolean;
   hasExistingStory = false;
+  
+  form: FormGroup;
   storyControl: FormControl;
   startDateControl: FormControl;
   endDateControl: FormControl;
+  photoControl: FormControl;
 
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
@@ -50,6 +54,7 @@ export class MapDrawerComponent implements OnInit {
     );
     this.startDateControl = new FormControl(null, Validators.required);
     this.endDateControl = new FormControl(null, Validators.required);
+    this.photoControl = new FormControl(null, Validators.required);
     this.form = new FormGroup({
       storyControl: this.storyControl,
       startDateControl: this.startDateControl,
