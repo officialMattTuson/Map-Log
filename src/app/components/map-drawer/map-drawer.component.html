@@ -1,5 +1,5 @@
 <h3 id="location-title">{{ selectedLocation }}</h3>
-<div class="drawer-container">
+<div class="drawer-container" [formGroup]="form">
   <div class="drawer-container__title-block">
     <button
       id="add-photo-btn"
@@ -14,8 +14,16 @@
     <mat-form-field>
       <mat-label>Enter a date range</mat-label>
       <mat-date-range-input [rangePicker]="picker">
-        <input matStartDate placeholder="Start date" />
-        <input matEndDate placeholder="End date" />
+        <input
+          matStartDate
+          [formControl]="startDateControl"
+          placeholder="Start date"
+        />
+        <input
+          matEndDate
+          [formControl]="endDateControl"
+          placeholder="End date"
+        />
       </mat-date-range-input>
       <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
       <mat-datepicker-toggle
@@ -23,6 +31,7 @@
         [for]="picker"
       ></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
+      <mat-error *ngIf="hasFailedSubmitAttempt"></mat-error>
     </mat-form-field>
   </div>
   <div class="drawer-container__description-block">

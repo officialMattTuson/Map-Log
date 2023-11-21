@@ -1,6 +1,6 @@
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {take} from 'rxjs';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
 import {StoryMarker} from 'src/app/models.ts/marker';
@@ -13,13 +13,15 @@ import {SharedMapService} from 'src/app/services/shared-map.service';
   styleUrls: ['./map-drawer.component.scss'],
 })
 export class MapDrawerComponent implements OnInit {
+  form: FormGroup;
   storyMarker: StoryMarker;
   selectedLocation: string;
   locationDescription: string;
   hasFailedSubmitAttempt: boolean;
   hasExistingStory = false;
   storyControl: FormControl;
-  selectedDateControl: FormControl;
+  startDateControl: FormControl;
+  endDateControl: FormControl;
 
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
@@ -46,7 +48,13 @@ export class MapDrawerComponent implements OnInit {
       this.storyMarker.story.length === 0 ? this.storyMarker.story : '',
       [Validators.required, Validators.minLength(3)],
     );
-    this.selectedDateControl = new FormControl(null, Validators.required);
+    this.startDateControl = new FormControl(null, Validators.required);
+    this.endDateControl = new FormControl(null, Validators.required);
+    this.form = new FormGroup({
+      storyControl: this.storyControl,
+      startDateControl: this.startDateControl,
+      endDateControl: this.endDateControl,
+    });
   }
 
   getFeatures(coordinates: number[]) {
@@ -62,16 +70,27 @@ export class MapDrawerComponent implements OnInit {
 
   addLocationStory() {
     this.hasFailedSubmitAttempt = this.storyControl.invalid;
-    if (this.storyControl.invalid) {
+    if (this.form.invalid) {
       this.storyControl.markAsTouched();
       return;
     }
     this.storyMarker.story = this.storyControl.value;
+    this.storyMarker.startDate = this.getDate(this.startDateControl.value);
+    this.storyMarker.endDate = this.getDate(this.endDateControl.value);
     this.hasExistingStory = true;
   }
 
   updateStory() {
     this.hasExistingStory = false;
+  }
+
+  getDate(selectedDate: Date): string {
+    const formattedDate = new Intl.DateTimeFormat('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(selectedDate);
+    return formattedDate;
   }
 
   uploadPhoto() {
