@@ -14,13 +14,13 @@ import {SharedMapService} from 'src/app/services/shared-map.service';
 })
 export class MapDrawerComponent implements OnInit {
   storyMarker: StoryMarker;
-  
+
   selectedLocation: string;
   locationDescription: string;
-  
+
   hasFailedSubmitAttempt: boolean;
   hasExistingStory = false;
-  
+
   form: FormGroup;
   storyControl: FormControl;
   startDateControl: FormControl;
@@ -48,10 +48,10 @@ export class MapDrawerComponent implements OnInit {
   }
 
   createForm() {
-    this.storyControl = new FormControl(
-      this.storyMarker.story.length === 0 ? this.storyMarker.story : '',
-      [Validators.required, Validators.minLength(3)],
-    );
+    this.storyControl = new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+    ]);
     this.startDateControl = new FormControl(null, Validators.required);
     this.endDateControl = new FormControl(null, Validators.required);
     this.photoControl = new FormControl(null, Validators.required);
@@ -82,12 +82,20 @@ export class MapDrawerComponent implements OnInit {
     this.storyMarker.story = this.storyControl.value;
     this.storyMarker.startDate = this.getDate(this.startDateControl.value);
     this.storyMarker.endDate = this.getDate(this.endDateControl.value);
-    console.log(this.storyMarker)
     this.hasExistingStory = true;
   }
 
   updateStory() {
     this.hasExistingStory = false;
+    this.patchForm();
+  }
+
+  patchForm() {
+    this.form.patchValue({
+      storyControl: this.storyMarker.story,
+      startDateControl: new Date(this.storyMarker.startDate),
+      endDateControl: new Date(this.storyMarker.endDate),
+    })
   }
 
   getDate(selectedDate: Date): string {

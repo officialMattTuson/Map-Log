@@ -1,78 +1,92 @@
-<h3 id="location-title">{{ selectedLocation }}</h3>
-<div class="drawer-container" [formGroup]="form">
-  <div class="drawer-container__title-block">
-    <button
-      id="add-photo-btn"
-      mat-stroked-button
-      color="primary"
-      (click)="uploadPhoto()"
-    >
-      <mat-icon id="photo-icon">add_a_photo</mat-icon>
-      Upload Photo
-    </button>
+<h3 id="location-title" class="mat-h3">{{ selectedLocation }}</h3>
 
-    <mat-form-field>
-      <mat-label>When were you in this location?</mat-label>
-      <mat-date-range-input [rangePicker]="picker">
-        <input
-          matStartDate
-          [formControl]="startDateControl"
-          placeholder="Start date"
-        />
-        <input
-          matEndDate
-          [formControl]="endDateControl"
-          placeholder="End date"
-        />
-      </mat-date-range-input>
-      <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-      <mat-error *ngIf="hasFailedSubmitAttempt"></mat-error>
-    </mat-form-field>
-  </div>
-  <div class="drawer-container__description-block">
-    <ng-container *ngIf="!hasExistingStory; else viewBlock">
-      <mat-form-field appearance="fill">
-        <textarea
-          id="textarea"
-          matInput
-          [formControl]="storyControl"
-          placeholder="What did you do here?"
-          maxlength="300"
-          cdkTextareaAutosize
-          #autosize="cdkTextareaAutosize"
-          cdkAutosizeMinRows="1"
-          cdkAutosizeMaxRows="5"
-        ></textarea>
+<div class="drawer-container" [formGroup]="form">
+  <ng-container *ngIf="!hasExistingStory; else viewBlock">
+    <div class="drawer-container__block">
+      <mat-form-field>
+        <mat-label>When were you in this location?</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input
+            matStartDate
+            [formControl]="startDateControl"
+            placeholder="Start date"
+          />
+          <input
+            matEndDate
+            [formControl]="endDateControl"
+            placeholder="End date"
+          />
+        </mat-date-range-input>
+        <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        <mat-error *ngIf="hasFailedSubmitAttempt"></mat-error>
       </mat-form-field>
-      <mat-hint>{{ storyControl.value.length + ' / 300' }}</mat-hint>
-      <mat-error *ngIf="hasFailedSubmitAttempt"
-        >Please complete your story before submitting
-      </mat-error>
+      <ng-container>
+        <mat-form-field appearance="fill" id="story-field">
+          <textarea
+            id="textarea"
+            matInput
+            [formControl]="storyControl"
+            placeholder="What did you do here?"
+            maxlength="400"
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5"
+          ></textarea>
+          <mat-error *ngIf="hasFailedSubmitAttempt"
+            >Please complete your story before submitting
+          </mat-error>
+        </mat-form-field>
+        <mat-hint>{{ storyControl.value.length + ' / 400' }}</mat-hint>
+      </ng-container>
+    </div>
+
+    <div class="drawer-container__block">
+      <ng-container *ngTemplateOutlet="photoButton"></ng-container>
       <button
         mat-raised-button
         (click)="addLocationStory()"
         class="submit-btn"
         color="primary"
       >
-        Add Story
+        Add Location Details
       </button>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
 </div>
 
 <ng-template #viewBlock>
-  <p id="story">{{ storyMarker.story }}</p>
+  <div class="drawer-container__block">
+    <h2 id="date">{{ storyMarker.startDate + ' - ' + storyMarker.endDate }}</h2>
+    <p id="story">{{ storyMarker.story }}</p>
+  </div>
+
+  <div class="drawer-container__block">
+    <ng-container *ngTemplateOutlet="photoButton"></ng-container>
+    <button
+      mat-raised-button
+      (click)="updateStory()"
+      class="submit-btn"
+      color="primary"
+    >
+      Update Location Details
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #photoButton>
   <button
-    mat-raised-button
-    (click)="updateStory()"
-    class="submit-btn"
+    id="add-photo-btn"
+    mat-stroked-button
     color="primary"
+    (click)="uploadPhoto()"
   >
-    Update Story
+    <mat-icon id="photo-icon">add_a_photo</mat-icon>
+    Upload Photo
   </button>
 </ng-template>
