@@ -27,6 +27,7 @@ export class WorldMapComponent implements OnInit {
   public storyMarkers: StoryMarker[] = [];
   public aucklandCoordinates: LngLatLike = [174.7645, -36.8509];
   public selectedLocation: string;
+  public isExistingMarker = false;
 
   isOverlayOpen$ = this.mapOverlayService.isOverlayOpen$;
 
@@ -104,6 +105,7 @@ export class WorldMapComponent implements OnInit {
           popupComponentRef.instance.location = this.selectedLocation;
           let popup: mapboxgl.Popup;
           if (clickedMarker) {
+            this.isExistingMarker = true;
             popupComponentRef.instance.selectedStoryMarker = clickedMarker;
             const markerScreenPoint = map.project(
               clickedMarker.marker.getLngLat(),
@@ -116,7 +118,9 @@ export class WorldMapComponent implements OnInit {
               .setLngLat(popupLngLat)
               .setDOMContent(popupComponentRef.location.nativeElement)
               .addTo(map);
+            popupComponentRef.instance.popup = popup;
           } else {
+            this.isExistingMarker = false;
             popup = new mapboxgl.Popup({closeOnClick: true})
               .setLngLat(event.lngLat)
               .setDOMContent(popupComponentRef.location.nativeElement)

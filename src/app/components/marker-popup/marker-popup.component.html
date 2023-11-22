@@ -1,8 +1,10 @@
-<div class="popup-container">
-  <h3 id="location">{{ location }}</h3>
+<div
+  *ngIf="placeMarkerConfirmationPopup; else viewBlock"
+  class="popup-container"
+>
+  <h3 class="location">{{ location }}</h3>
 
   <button
-    *ngIf="placeMarkerConfirmationPopup; else overlayButton"
     class="popup-action-btn"
     mat-raised-button
     color="accent"
@@ -12,13 +14,17 @@
   </button>
 </div>
 
-<ng-template #overlayButton>
-  <button
-    class="popup-action-btn"
-    mat-raised-button
-    color="accent"
-    (click)="openOverlay()"
-  >
-    View
-  </button>
+<ng-template #viewBlock>
+  <div class="popup-container">
+    <h3 class="location">{{ location }}</h3>
+
+    <button
+      id="popup-action-btn"
+      mat-raised-button
+      color="accent"
+      (click)="openOverlay()"
+    >
+      View
+    </button>
+  </div>
 </ng-template>

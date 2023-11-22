@@ -82,6 +82,7 @@ export class MapDrawerComponent implements OnInit {
     this.storyMarker.story = this.storyControl.value;
     this.storyMarker.startDate = this.getDate(this.startDateControl.value);
     this.storyMarker.endDate = this.getDate(this.endDateControl.value);
+    console.log(this.storyMarker)
     this.hasExistingStory = true;
   }
 
