@@ -26,15 +26,15 @@ export class MapOverlayComponent {
   createMapOverlayComponent(
     overlayComponent: Type<MapDrawerComponent>,
     storyMarker: StoryMarker,
-    locationDescription?: string,
+    selectedLocation?: string,
   ) {
     const containerRef = this.mapOverlayDirective.viewContainerRef;
     this.mapOverlayComponentRef =
       containerRef.createComponent<MapDrawerComponent>(overlayComponent);
     this.mapOverlayComponentRef.instance.storyMarker = storyMarker;
-    if (locationDescription) {
-      this.mapOverlayComponentRef.instance.locationDescription =
-        locationDescription;
+    if (selectedLocation) {
+      this.mapOverlayComponentRef.instance.selectedLocation =
+      selectedLocation;
     }
   }
 

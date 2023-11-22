@@ -33,10 +33,6 @@
             [formControl]="storyControl"
             placeholder="What did you do here?"
             maxlength="400"
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5"
           ></textarea>
           <mat-error *ngIf="hasFailedSubmitAttempt"
             >Please complete your story before submitting

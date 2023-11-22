@@ -93,9 +93,8 @@ export class WorldMapComponent implements OnInit {
       const coordinates = event.lngLat.toArray();
 
       this.getLocationInfoAtCoordinates(coordinates).subscribe({
-        next: (locationInfo: any) => {
+        next: (locationInfo: string) => {
           this.selectedLocation = locationInfo;
-
           const clickedMarker = this.findMarkerByCoordinates(map, event.lngLat);
           const popupFactory =
             this.factoryResolver.resolveComponentFactory(MarkerPopupComponent);
@@ -148,7 +147,7 @@ export class WorldMapComponent implements OnInit {
 
   handleMarkerPlacedEvent(
     popup: mapboxgl.Popup,
-    event: any,
+    event: mapboxgl.MapMouseEvent,
     map: mapboxgl.Map,
   ) {
     popup.getElement().addEventListener('click', () => {
@@ -161,7 +160,7 @@ export class WorldMapComponent implements OnInit {
     });
   }
 
-  getLocationInfoAtCoordinates(coordinates: number[]): Observable<any> {
+  getLocationInfoAtCoordinates(coordinates: number[]): Observable<string> {
     return this.geocoderService.getFeaturesFromCoordinates(coordinates).pipe(
       take(1),
       map(result => {
