@@ -1,9 +1,12 @@
 import * as mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import {
+  AfterViewInit,
   Component,
   ComponentFactoryResolver,
+  ElementRef,
   OnInit,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import {LngLatLike, MapMouseEvent} from 'mapbox-gl';
@@ -41,6 +44,8 @@ export class WorldMapComponent implements OnInit {
     private readonly mapOverlayService: MapOverlayService,
     private readonly sharedMapService: SharedMapService,
     private readonly geocoderService: GeocoderService,
+    private renderer: Renderer2,
+    private el: ElementRef,
   ) {}
 
   ngOnInit(): void {
@@ -112,11 +117,11 @@ export class WorldMapComponent implements OnInit {
             const popupLngLat = map.unproject(
               markerScreenPoint.add(new mapboxgl.Point(0, -40)),
             );
-
             popup = new mapboxgl.Popup()
-              .setLngLat(popupLngLat)
-              .setDOMContent(popupComponentRef.location.nativeElement)
-              .addTo(map);
+            .setLngLat(popupLngLat)
+            .setDOMContent(popupComponentRef.location.nativeElement)
+            .addTo(map);
+            this.overridePopupStyles(popup);
             popupComponentRef.instance.popup = popup;
           } else {
             this.isExistingMarker = false;
@@ -228,5 +233,15 @@ export class WorldMapComponent implements OnInit {
   removeAllMarkers() {
     this.storyMarkers.forEach(storyMarker => storyMarker.marker.remove());
     this.storyMarkers = [];
+  }
+
+  overridePopupStyles(popup: mapboxgl.Popup) {
+    const popupElement = popup.getElement().parentElement?.getElementsByClassName('mapboxgl-popup-content')[0] as HTMLElement;
+    popupElement.style.borderRadius = '0.5rem';
+    popupElement.style.width = '15rem';
+    popupElement.style.height = '15rem';
+    const closeButtonElement = popup.getElement().parentElement?.getElementsByClassName('mapboxgl-popup-close-button')[0] as HTMLElement;
+    closeButtonElement.style.top = '-114%';
+    closeButtonElement.style.left = '100%';
   }
 }

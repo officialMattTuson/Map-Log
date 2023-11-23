@@ -1,4 +1,3 @@
-
 .popup-container {
   display: flex;
   align-items: center;
@@ -16,4 +15,36 @@
 #popup-action-btn {
   text-align: center;
   font-size: 0.75rem;
+}
+
+:host ::ng-deep {
+  .mat-mdc-card-avatar {
+    display: none;
+  }
+
+  .mat-mdc-card-header {
+    padding: 0;
+  }
+
+  .mat-mdc-card-title,
+  .mat-mdc-card-subtitle {
+    text-align: center;
+  }
+
+  .mat-mdc-card-subtitle ~ .mat-mdc-card-title,
+  .mat-mdc-card-title ~ .mat-mdc-card-subtitle,
+  .mat-mdc-card-header .mat-mdc-card-header-text .mat-mdc-card-title,
+  .mat-mdc-card-header .mat-mdc-card-header-text .mat-mdc-card-subtitle,
+  .mat-mdc-card-title-group .mat-mdc-card-title,
+  .mat-mdc-card-title-group .mat-mdc-card-subtitle {
+    padding: 1rem;
+  }
+
+  .mdc-card__actions {
+    justify-content: center;
+  }
+
+  .mdc-card__actions .mat-mdc-raised-button:not(:disabled) {
+    width: 100%;
+  }
 }
