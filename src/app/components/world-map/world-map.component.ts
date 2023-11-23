@@ -111,6 +111,7 @@ export class WorldMapComponent implements OnInit {
           if (clickedMarker) {
             this.isExistingMarker = true;
             popupComponentRef.instance.selectedStoryMarker = clickedMarker;
+            popupComponentRef.instance.storyMarkers = this.storyMarkers;
             const markerScreenPoint = map.project(
               clickedMarker.marker.getLngLat(),
             );

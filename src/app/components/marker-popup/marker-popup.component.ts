@@ -12,6 +12,7 @@ import {Popup} from 'mapbox-gl';
 export class MarkerPopupComponent implements OnInit {
   @Input() location: string;
   @Input() selectedStoryMarker: StoryMarker;
+  @Input() storyMarkers: StoryMarker[];
   @Input() placeMarkerConfirmationPopup: boolean;
   @Input() popup: Popup;
   @Output() placeMarkerClicked = new EventEmitter<void>();
@@ -39,6 +40,7 @@ export class MarkerPopupComponent implements OnInit {
     this.popup.remove();
     this.mapOverlayService.openPanel(
       MapDrawerComponent,
+      this.storyMarkers,
       this.selectedStoryMarker,
       this.location,
     );

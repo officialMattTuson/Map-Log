@@ -3,6 +3,7 @@ import {MapOverlayDirective} from '../directives/map-overlay.directive';
 import {MapOverlayComponent} from '../components/map-overlay/map-overlay.component';
 import {BehaviorSubject} from 'rxjs';
 import {MapDrawerComponent} from '../components/map-drawer/map-drawer.component';
+import { StoryMarker } from '../models.ts/marker';
 
 @Injectable({
   providedIn: 'root',
@@ -16,16 +17,18 @@ export class MapOverlayService {
 
   public openPanel(
     overlayComponent: Type<MapDrawerComponent>,
+    storyMarkers: StoryMarker[],
     data: any,
     locationDescription?: string
   ): MapOverlayComponent {
-    this.createHostComponent(overlayComponent, data, locationDescription);
+    this.createHostComponent(overlayComponent, storyMarkers, data, locationDescription);
     this._isOverlayOpen.next(true);
     return this._mapOverlayComponentRef.instance;
   }
 
   private createHostComponent(
     overlayComponent: Type<MapDrawerComponent>,
+    storyMarkers: StoryMarker[],
     data: any,
     locationDescription?: string
   ) {
@@ -34,7 +37,7 @@ export class MapOverlayService {
     this._mapOverlayComponentRef.setInput('data', data);
     this._mapOverlayComponentRef.setInput('placeMarkerLocationDescription', locationDescription);
     this._mapOverlayComponentRef.instance.createMapOverlayComponent(
-      overlayComponent, data, locationDescription
+      overlayComponent, storyMarkers, data, locationDescription
     );
   }
 
