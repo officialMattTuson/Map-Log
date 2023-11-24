@@ -38,7 +38,6 @@ export class MapDrawerComponent implements OnInit {
     const coordinates = this.selectedStoryMarker.marker.getLngLat();
     const mappedCoords = [coordinates.lng, coordinates.lat];
     this.getFeatures(mappedCoords);
-    this.validateSelectedDates();
   }
 
   createForm() {
@@ -74,24 +73,29 @@ export class MapDrawerComponent implements OnInit {
       return;
     }
     this.selectedStoryMarker.story = this.storyControl.value;
-    this.selectedStoryMarker.startDate = this.getDate(this.startDateControl.value);
-    this.selectedStoryMarker.endDate = this.getDate(this.endDateControl.value);
+    this.selectedStoryMarker.startDate = this.getDate(
+      this.startDateControl.value,
+      );
+      this.selectedStoryMarker.endDate = this.getDate(this.endDateControl.value);
+      this.validateSelectedDates();
     this.hasExistingStory = true;
   }
 
   validateSelectedDates() {
-    if (this.storyMarkers.length === 0) {
-      return;
-    }
-
+    let currentMarkerSelectedDates: string[] = [];
     this.storyMarkers.forEach(marker => {
-      if (marker === this.selectedStoryMarker) {
+      if (!marker.startDate || !marker.endDate) {
         return;
       }
-      const markerDates: string[] = [marker.startDate, marker.endDate]
-      this.listOfUsedDatesSelected.push(markerDates)
-      console.log(this.getDatesInRange(markerDates))
-    })
+      if (marker.story === this.selectedStoryMarker.story) {
+        currentMarkerSelectedDates.push(this.getDatesInRange([this.startDateControl.value, this.endDateControl.value]));
+        return;
+      }
+      const markerDates: string[] = [marker.startDate, marker.endDate];
+      this.listOfUsedDatesSelected.push(this.getDatesInRange(markerDates));
+    });
+    console.log(this.listOfUsedDatesSelected)
+    console.log(currentMarkerSelectedDates)
   }
 
   getDatesInRange(setDates: string[]) {
@@ -99,16 +103,16 @@ export class MapDrawerComponent implements OnInit {
     const endDate = setDates[1];
     const daysBetweenStartAndEndDates = [];
     let currentDate = new Date(startDate);
-  
+
     while (currentDate <= new Date(endDate)) {
       daysBetweenStartAndEndDates.push(new Date(currentDate));
       currentDate.setDate(currentDate.getDate() + 1);
     }
     const formattedDates: string[] = daysBetweenStartAndEndDates.map(date => {
-      return this.getDate(date)
-    })
-  
-    return formattedDates;
+      return this.getDate(date);
+    });
+
+    return formattedDates.join(' ');
   }
 
   updateStory() {
@@ -119,9 +123,9 @@ export class MapDrawerComponent implements OnInit {
   patchForm() {
     this.form.patchValue({
       storyControl: this.selectedStoryMarker.story,
-      startDateControl: new Date(this.selectedStoryMarker.startDate),
-      endDateControl: new Date(this.selectedStoryMarker.endDate),
-    })
+      startDateControl: new Date(this.selectedStoryMarker?.startDate ?? ''),
+      endDateControl: new Date(this.selectedStoryMarker?.endDate ?? ''),
+    });
   }
 
   getDate(selectedDate: Date): string {
