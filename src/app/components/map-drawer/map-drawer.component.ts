@@ -94,8 +94,6 @@ export class MapDrawerComponent implements OnInit {
       const markerDates: string[] = [marker.startDate, marker.endDate];
       this.listOfUsedDatesSelected.push(this.getDatesInRange(markerDates));
     });
-    console.log(this.listOfUsedDatesSelected)
-    console.log(currentMarkerSelectedDates)
   }
 
   getDatesInRange(setDates: string[]) {
