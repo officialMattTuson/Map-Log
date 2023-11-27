@@ -112,16 +112,14 @@ export class WorldMapComponent implements OnInit {
             this.isExistingMarker = true;
             popupComponentRef.instance.selectedStoryMarker = clickedMarker;
             popupComponentRef.instance.storyMarkers = this.storyMarkers;
-            const markerScreenPoint = map.project(
-              clickedMarker.marker.getLngLat(),
-            );
+            const markerScreenPoint = map.project(clickedMarker.marker.getLngLat());
             const popupLngLat = map.unproject(
               markerScreenPoint.add(new mapboxgl.Point(0, -40)),
             );
             popup = new mapboxgl.Popup()
-            .setLngLat(popupLngLat)
-            .setDOMContent(popupComponentRef.location.nativeElement)
-            .addTo(map);
+              .setLngLat(popupLngLat)
+              .setDOMContent(popupComponentRef.location.nativeElement)
+              .addTo(map);
             this.overridePopupStyles(popup);
             popupComponentRef.instance.popup = popup;
           } else {
@@ -161,7 +159,12 @@ export class WorldMapComponent implements OnInit {
         .setLngLat(event.lngLat)
         .addTo(map);
       popup.remove();
-      const newStoryMarker: StoryMarker = {marker: marker, story: ''};
+      const newStoryMarker: StoryMarker = {
+        marker: marker,
+        story: '',
+        startDate: '',
+        endDate: '',
+      };
       this.storyMarkers = [...this.storyMarkers, newStoryMarker];
     });
   }
@@ -237,11 +240,17 @@ export class WorldMapComponent implements OnInit {
   }
 
   overridePopupStyles(popup: mapboxgl.Popup) {
-    const popupElement = popup.getElement().parentElement?.getElementsByClassName('mapboxgl-popup-content')[0] as HTMLElement;
+    const popupElement = popup
+      .getElement()
+      .parentElement?.getElementsByClassName('mapboxgl-popup-content')[0] as HTMLElement;
     popupElement.style.borderRadius = '0.5rem';
     popupElement.style.width = '15rem';
     popupElement.style.height = '15rem';
-    const closeButtonElement = popup.getElement().parentElement?.getElementsByClassName('mapboxgl-popup-close-button')[0] as HTMLElement;
+    const closeButtonElement = popup
+      .getElement()
+      .parentElement?.getElementsByClassName(
+        'mapboxgl-popup-close-button',
+      )[0] as HTMLElement;
     closeButtonElement.style.top = '-114%';
     closeButtonElement.style.left = '100%';
   }

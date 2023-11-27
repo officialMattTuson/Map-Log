@@ -3,8 +3,10 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {take} from 'rxjs';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
 import {StoryMarker} from 'src/app/models.ts/marker';
+import {DateService} from 'src/app/services/date.service';
 import {MapOverlayService} from 'src/app/services/map-overlay.service';
 import {SharedMapService} from 'src/app/services/shared-map.service';
+import {SnackbarService} from 'src/app/snackbar.service';
 
 @Component({
   selector: 'app-map-drawer',
@@ -30,6 +32,8 @@ export class MapDrawerComponent implements OnInit {
     private readonly geocoderService: GeocoderService,
     private readonly sharedMapService: SharedMapService,
     private readonly mapOverlayService: MapOverlayService,
+    private readonly snackBarService: SnackbarService,
+    private readonly dateService: DateService,
   ) {}
 
   ngOnInit() {
@@ -61,61 +65,51 @@ export class MapDrawerComponent implements OnInit {
       .pipe(take(1))
       .subscribe({
         next: (result: any) =>
-          (this.selectedLocation =
-            this.sharedMapService.getLocationDetails(result)),
+          (this.selectedLocation = this.sharedMapService.getLocationDetails(result)),
       });
   }
 
   addLocationStory() {
+    this.dateService.setInputtedDateValues(
+      this.startDateControl.value,
+      this.endDateControl.value,
+    );
     this.hasFailedSubmitAttempt = this.storyControl.invalid;
-    if (this.form.invalid) {
-      this.storyControl.markAsTouched();
+    (this.selectedStoryMarker.marker = this.selectedStoryMarker.marker),
+      (this.selectedStoryMarker.story = this.storyControl.value),
+      (this.selectedStoryMarker.startDate = this.dateService.getDate(
+        this.startDateControl.value,
+      )),
+      (this.selectedStoryMarker.endDate = this.dateService.getDate(
+        this.endDateControl.value,
+      ));
+    const overlappingDates = this.dateService.validateSelectedDates(
+      this.storyMarkers,
+      this.selectedStoryMarker,
+    );
+    if (overlappingDates.length > 0) {
+      this.startDateControl.setErrors({invalidDate: true});
+      this.resetForm();
+      this.snackBarService.onError('These dates are already in use');
       return;
     }
-    this.selectedStoryMarker.story = this.storyControl.value;
-    this.selectedStoryMarker.startDate = this.getDate(
-      this.startDateControl.value,
-      );
-      this.selectedStoryMarker.endDate = this.getDate(this.endDateControl.value);
-      this.validateSelectedDates();
-    this.hasExistingStory = true;
-  }
-
-  validateSelectedDates() {
-    let currentMarkerSelectedDates: string[] = [];
-    this.storyMarkers.forEach(marker => {
-      if (!marker.startDate || !marker.endDate) {
-        return;
-      }
-      if (marker.story === this.selectedStoryMarker.story) {
-        currentMarkerSelectedDates.push(this.getDatesInRange([this.startDateControl.value, this.endDateControl.value]));
-        return;
-      }
-      const markerDates: string[] = [marker.startDate, marker.endDate];
-      this.listOfUsedDatesSelected.push(this.getDatesInRange(markerDates));
-    });
-  }
-
-  getDatesInRange(setDates: string[]) {
-    const startDate = setDates[0];
-    const endDate = setDates[1];
-    const daysBetweenStartAndEndDates = [];
-    let currentDate = new Date(startDate);
-
-    while (currentDate <= new Date(endDate)) {
-      daysBetweenStartAndEndDates.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
+    if (this.form.invalid) {
+      this.storyControl.markAsTouched();
+      this.snackBarService.onError('Please resolve errors before submitting story');
+      return;
     }
-    const formattedDates: string[] = daysBetweenStartAndEndDates.map(date => {
-      return this.getDate(date);
-    });
-
-    return formattedDates.join(' ');
+    this.hasExistingStory = true;
   }
 
   updateStory() {
     this.hasExistingStory = false;
     this.patchForm();
+  }
+
+  resetForm() {
+    this.selectedStoryMarker.startDate = '';
+    this.selectedStoryMarker.endDate = '';
+    this.form.reset();
   }
 
   patchForm() {
@@ -124,15 +118,6 @@ export class MapDrawerComponent implements OnInit {
       startDateControl: new Date(this.selectedStoryMarker?.startDate ?? ''),
       endDateControl: new Date(this.selectedStoryMarker?.endDate ?? ''),
     });
-  }
-
-  getDate(selectedDate: Date): string {
-    const formattedDate = new Intl.DateTimeFormat('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    }).format(selectedDate);
-    return formattedDate;
   }
 
   uploadPhoto() {
