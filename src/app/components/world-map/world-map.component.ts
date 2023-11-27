@@ -75,7 +75,7 @@ export class WorldMapComponent implements OnInit {
       container: 'map',
       style: 'mapbox://styles/mapbox/satellite-streets-v11',
       center: coordinates,
-      zoom: 10,
+      zoom: 8,
     });
 
     this.searchGeocoder(map);
@@ -155,7 +155,7 @@ export class WorldMapComponent implements OnInit {
     map: mapboxgl.Map,
   ) {
     popup.getElement().addEventListener('click', () => {
-      const marker = new mapboxgl.Marker({draggable: true})
+      const marker = new mapboxgl.Marker()
         .setLngLat(event.lngLat)
         .addTo(map);
       popup.remove();
