@@ -3,29 +3,33 @@
 <div class="drawer-container" [formGroup]="form">
   <ng-container *ngIf="!hasExistingStory; else viewBlock">
     <div class="drawer-container__block">
-      <mat-form-field>
-        <mat-label>When were you in this location?</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-          <input
-            matStartDate
-            [formControl]="startDateControl"
-            placeholder="Start date"
-          />
-          <input
-            matEndDate
-            [formControl]="endDateControl"
-            placeholder="End date"
-          />
-        </mat-date-range-input>
-        <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker"
-        ></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-        <mat-error *ngIf="hasFailedSubmitAttempt"></mat-error>
-      </mat-form-field>
-      <ng-container>
+      <div class="drawer-container__block__control">
+        <mat-form-field>
+          <mat-label>When were you in this location?</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input
+              matStartDate
+              [formControl]="startDateControl"
+              placeholder="Start date"
+            />
+            <input
+              matEndDate
+              [formControl]="endDateControl"
+              placeholder="End date"
+            />
+          </mat-date-range-input>
+          <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <mat-error *ngIf="startDateControl.hasError('invalidDate')"
+          >These dates are already being used
+        </mat-error>
+      </div>
+      <div class="drawer-container__block__control">
         <mat-form-field appearance="fill" id="story-field">
           <textarea
             id="textarea"
@@ -39,7 +43,7 @@
           </mat-error>
         </mat-form-field>
         <mat-hint>{{ storyControl.value.length + ' / 400' }}</mat-hint>
-      </ng-container>
+      </div>
     </div>
 
     <div class="drawer-container__block">
@@ -58,7 +62,9 @@
 
 <ng-template #viewBlock>
   <div class="drawer-container__block">
-    <h2 id="date">{{ selectedStoryMarker.startDate + ' - ' + selectedStoryMarker.endDate }}</h2>
+    <h2 id="date">
+      {{ selectedStoryMarker.startDate + ' - ' + selectedStoryMarker.endDate }}
+    </h2>
     <p id="story">{{ selectedStoryMarker.story }}</p>
   </div>
 

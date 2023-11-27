@@ -18,6 +18,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MapDrawerComponent} from './components/map-drawer/map-drawer.component';
 import {HttpClientModule} from '@angular/common/http';
 import {MapOverlayDirective} from './directives/map-overlay.directive';
@@ -49,7 +50,8 @@ import {ReactiveFormsModule} from '@angular/forms';
     MatSidenavModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSnackBarModule
   ],
   exports: [
     BrowserModule,
@@ -65,7 +67,8 @@ import {ReactiveFormsModule} from '@angular/forms';
     MatSidenavModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent],

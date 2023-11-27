@@ -5,11 +5,19 @@
   gap: 3rem;
 
   &__block {
-    gap: 2rem;
+    gap: 1rem;
     display: flex;
     align-items: center;
     height: 80%;
     flex-direction: column;
+
+    &__control {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
   }
 }
 
@@ -37,6 +45,15 @@
 
   #story-field .mat-mdc-text-field-wrapper {
     height: 10rem;
+  }
+
+  .mat-mdc-snack-bar-container.error {
+    color: red;
+    background-color: red;
+  }
+  
+  .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+    background-color: darkred;
   }
 }
 
@@ -85,3 +102,4 @@
   height: 9rem;
   width: 10.5rem;
 }
+
