@@ -5,15 +5,15 @@ import {StoryMarker} from '../models.ts/marker';
   providedIn: 'root',
 })
 export class DateService {
-  inputtedStartDate: string;
-  inputtedEndDate: string;
+  private _inputtedStartDate: string;
+  private _inputtedEndDate: string;
 
-  setInputtedDateValues(startDate: Date, endDate: Date) {
-    this.inputtedStartDate = this.getDate(startDate);
-    this.inputtedEndDate = this.getDate(endDate);
+  public setInputtedDateValues(startDate: Date, endDate: Date) {
+    this._inputtedStartDate = this.getDate(startDate);
+    this._inputtedEndDate = this.getDate(endDate);
   }
 
-  validateSelectedDates(
+  public validateSelectedDates(
     storyMarkers: StoryMarker[],
     selectedStoryMarker: StoryMarker,
   ): string[] {
@@ -22,8 +22,8 @@ export class DateService {
     storyMarkers.forEach(marker => {
       if (marker.story === selectedStoryMarker.story) {
         currentMarkerSelectedDates = this.getDatesInRange([
-          this.inputtedStartDate,
-          this.inputtedEndDate,
+          this._inputtedStartDate,
+          this._inputtedEndDate,
         ]);
         return;
       }
@@ -32,7 +32,6 @@ export class DateService {
         this.getDatesInRange(markerDates),
       );
     });
-
     const overlappingDates = this.findCommonValues(
       currentMarkerSelectedDates,
       listOfUsedDatesSelected,
@@ -40,7 +39,7 @@ export class DateService {
     return overlappingDates;
   }
 
-  findCommonValues(selectedDates: string[], existingDates: string[]): string[] {
+  private findCommonValues(selectedDates: string[], existingDates: string[]): string[] {
     let overlappingDates: string[] = [];
     existingDates.forEach(date => {
       if (selectedDates.includes(date)) {
@@ -50,7 +49,7 @@ export class DateService {
     return overlappingDates;
   }
 
-  getDatesInRange(setDates: string[]) {
+  private getDatesInRange(setDates: string[]) {
     const startDate = setDates[0];
     const endDate = setDates[1];
     const daysBetweenStartAndEndDates = [];
@@ -67,12 +66,20 @@ export class DateService {
     return formattedDates;
   }
 
-  getDate(selectedDate: Date): string {
+  public getDate(selectedDate: Date): string {
     const formattedDate = new Intl.DateTimeFormat('en-US', {
       month: 'long',
       day: 'numeric',
       year: 'numeric',
     }).format(selectedDate);
     return formattedDate.replace(',', '');
+  }
+
+  public compareDateSets(storyMarkers: StoryMarker[]): StoryMarker[] {
+    return storyMarkers.sort((a, b) => this.findEarliestDate(a.startDate) - this.findEarliestDate(b.startDate));
+  }
+
+  private findEarliestDate(startDate: string): number {
+    return new Date(startDate).getTime();
   }
 }

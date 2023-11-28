@@ -97,6 +97,7 @@ export class MapDrawerComponent implements OnInit {
       return;
     }
     this.hasExistingStory = true;
+    this.dateService.compareDateSets(this.storyMarkers);
   }
 
   updateStory() {
