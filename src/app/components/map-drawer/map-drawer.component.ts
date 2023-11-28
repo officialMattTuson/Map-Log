@@ -26,8 +26,6 @@ export class MapDrawerComponent implements OnInit {
   endDateControl: FormControl;
   photoControl: FormControl;
 
-  listOfUsedDatesSelected: any[] = [];
-
   constructor(
     private readonly geocoderService: GeocoderService,
     private readonly sharedMapService: SharedMapService,
