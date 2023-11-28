@@ -100,9 +100,7 @@ export class WorldMapComponent implements OnInit {
         next: (locationInfo: string) => {
           this.selectedLocation = locationInfo;
           const clickedMarker = this.findMarkerByCoordinates(event.lngLat);
-          const popupFactory = this.factoryResolver.resolveComponentFactory(MarkerPopupComponent);
-
-          const popupComponentRef = this.popupHost.viewContainerRef.createComponent(popupFactory);
+          const popupComponentRef = this.createPopupComponentRef();
           popupComponentRef.instance.location = this.selectedLocation;
           clickedMarker
             ? this.onExistingPopupClick(popupComponentRef, clickedMarker)
@@ -110,6 +108,11 @@ export class WorldMapComponent implements OnInit {
         },
       });
     });
+  }
+
+  createPopupComponentRef(): ComponentRef<MarkerPopupComponent> {
+    const popupFactory = this.factoryResolver.resolveComponentFactory(MarkerPopupComponent);
+    return this.popupHost.viewContainerRef.createComponent(popupFactory);
   }
 
   onExistingPopupClick(
