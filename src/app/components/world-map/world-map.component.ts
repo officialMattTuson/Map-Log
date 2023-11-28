@@ -9,7 +9,7 @@ import {MapOverlayService} from 'src/app/services/map-overlay.service';
 import {MapOverlayDirective} from 'src/app/directives/map-overlay.directive';
 import {environment} from 'src/environments/environments';
 import {GeocoderService} from 'src/app/endpoints/geocoder.service';
-import {Observable, map, take} from 'rxjs';
+import {Observable, Subject, map, take, takeUntil} from 'rxjs';
 import {SharedMapService} from 'src/app/services/shared-map.service';
 import {StoryMarker} from 'src/app/models.ts/marker';
 
@@ -26,11 +26,11 @@ export class WorldMapComponent implements OnInit {
   public map: mapboxgl.Map;
 
   isOverlayOpen$ = this.mapOverlayService.isOverlayOpen$;
+  private destroy$ = new Subject<boolean>();
 
   @ViewChild('drawer') drawer: MatDrawer;
   @ViewChild(PopupHostDirective, {static: true}) popupHost: PopupHostDirective;
-  @ViewChild(MapOverlayDirective, {static: true})
-  overlayDirective: MapOverlayDirective;
+  @ViewChild(MapOverlayDirective, {static: true}) overlayDirective: MapOverlayDirective;
 
   constructor(
     private readonly factoryResolver: ComponentFactoryResolver,
@@ -46,6 +46,7 @@ export class WorldMapComponent implements OnInit {
       () => this.onLocationError(),
       {enableHighAccuracy: true},
     );
+    this.observeStoryMarkers();
   }
 
   onLocationSuccess(position: GeolocationPosition) {
@@ -222,6 +223,8 @@ export class WorldMapComponent implements OnInit {
 
   removeAllMarkers() {
     this.storyMarkers.forEach(storyMarker => storyMarker.marker.remove());
+    this.map.removeLayer('lines');
+    this.map.removeSource('lines');
     this.storyMarkers = [];
   }
 
@@ -237,5 +240,47 @@ export class WorldMapComponent implements OnInit {
       .parentElement?.getElementsByClassName('mapboxgl-popup-close-button')[0] as HTMLElement;
     closeButtonElement.style.top = '-114%';
     closeButtonElement.style.left = '100%';
+  }
+
+  observeStoryMarkers() {
+    this.sharedMapService.$storyMarkers.pipe(takeUntil(this.destroy$)).subscribe(storyMarkers => {
+      this.storyMarkers = storyMarkers;
+      this.updateLinesOnMap(storyMarkers);
+    });
+  }
+
+  updateLinesOnMap(storyMarkers: StoryMarker[]) {
+    const coordinates = storyMarkers.map(marker => marker.marker.getLngLat());
+
+    if (this.map.getLayer('lines')) {
+      this.map.removeLayer('lines');
+      this.map.removeSource('lines');
+    }
+
+    this.map.addSource('lines', {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: coordinates.map(coord => [coord.lng, coord.lat]),
+        },
+      },
+    });
+
+    this.map.addLayer({
+      id: 'lines',
+      type: 'line',
+      source: 'lines',
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+      },
+      paint: {
+        'line-color': '#FF00FF',
+        'line-width': 8,
+      },
+    });
   }
 }

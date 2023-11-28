@@ -85,6 +85,7 @@ export class MapDrawerComponent implements OnInit {
     }
     this.hasExistingStory = true;
     this.dateService.sortMarkersByStartDate(this.storyMarkers);
+    this.sharedMapService.setStoryMarkers(this.storyMarkers);
   }
 
   mapFormValues() {
