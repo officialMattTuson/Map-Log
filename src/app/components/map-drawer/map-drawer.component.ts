@@ -43,10 +43,7 @@ export class MapDrawerComponent implements OnInit {
   }
 
   createForm() {
-    this.storyControl = new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-    ]);
+    this.storyControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
     this.startDateControl = new FormControl(null, Validators.required);
     this.endDateControl = new FormControl(null, Validators.required);
     this.photoControl = new FormControl(null, Validators.required);
@@ -68,19 +65,9 @@ export class MapDrawerComponent implements OnInit {
   }
 
   addLocationStory() {
-    this.dateService.setInputtedDateValues(
-      this.startDateControl.value,
-      this.endDateControl.value,
-    );
+    this.dateService.setInputtedDateValues(this.startDateControl.value, this.endDateControl.value);
     this.hasFailedSubmitAttempt = this.storyControl.invalid;
-    (this.selectedStoryMarker.marker = this.selectedStoryMarker.marker),
-      (this.selectedStoryMarker.story = this.storyControl.value),
-      (this.selectedStoryMarker.startDate = this.dateService.getDate(
-        this.startDateControl.value,
-      )),
-      (this.selectedStoryMarker.endDate = this.dateService.getDate(
-        this.endDateControl.value,
-      ));
+    this.mapFormValues();
     const overlappingDates = this.dateService.validateSelectedDates(
       this.storyMarkers,
       this.selectedStoryMarker,
@@ -98,6 +85,12 @@ export class MapDrawerComponent implements OnInit {
     }
     this.hasExistingStory = true;
     this.dateService.sortMarkersByStartDate(this.storyMarkers);
+  }
+
+  mapFormValues() {
+    this.selectedStoryMarker.story = this.storyControl.value;
+    this.selectedStoryMarker.startDate = this.dateService.getDate(this.startDateControl.value);
+    this.selectedStoryMarker.endDate = this.dateService.getDate(this.endDateControl.value);
   }
 
   updateStory() {
