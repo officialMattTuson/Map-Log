@@ -1,15 +1,6 @@
 import * as mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import {
-  AfterViewInit,
-  Component,
-  ComponentFactoryResolver,
-  ComponentRef,
-  ElementRef,
-  OnInit,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
+import {Component, ComponentFactoryResolver, ComponentRef, OnInit, ViewChild} from '@angular/core';
 import {LngLatLike, MapMouseEvent} from 'mapbox-gl';
 import {PopupHostDirective} from 'src/app/directives/popup-host.directive';
 import {MarkerPopupComponent} from '../marker-popup/marker-popup.component';
@@ -46,8 +37,6 @@ export class WorldMapComponent implements OnInit {
     private readonly mapOverlayService: MapOverlayService,
     private readonly sharedMapService: SharedMapService,
     private readonly geocoderService: GeocoderService,
-    private renderer: Renderer2,
-    private el: ElementRef,
   ) {}
 
   ngOnInit(): void {
