@@ -20,17 +20,17 @@ export class DateService {
     let currentMarkerSelectedDates: string[] = [];
     let listOfUsedDatesSelected: string[] = [];
     storyMarkers.forEach(marker => {
-      if (marker.story === selectedStoryMarker.story) {
+      if (marker.marker === selectedStoryMarker.marker) {
         currentMarkerSelectedDates = this.getDatesInRange([
           this._inputtedStartDate,
           this._inputtedEndDate,
         ]);
-        return;
+      } else {
+        const markerDates: string[] = [marker.startDate, marker.endDate];
+        listOfUsedDatesSelected = listOfUsedDatesSelected.concat(
+          this.getDatesInRange(markerDates),
+        );
       }
-      const markerDates: string[] = [marker.startDate, marker.endDate];
-      listOfUsedDatesSelected = listOfUsedDatesSelected.concat(
-        this.getDatesInRange(markerDates),
-      );
     });
     const overlappingDates = this.findCommonValues(
       currentMarkerSelectedDates,
@@ -75,8 +75,10 @@ export class DateService {
     return formattedDate.replace(',', '');
   }
 
-  public compareDateSets(storyMarkers: StoryMarker[]): StoryMarker[] {
-    return storyMarkers.sort((a, b) => this.findEarliestDate(a.startDate) - this.findEarliestDate(b.startDate));
+  public sortMarkersByStartDate(storyMarkers: StoryMarker[]): StoryMarker[] {
+    return storyMarkers.sort(
+      (a, b) => this.findEarliestDate(a.startDate) - this.findEarliestDate(b.startDate),
+    );
   }
 
   private findEarliestDate(startDate: string): number {

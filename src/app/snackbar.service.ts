@@ -10,7 +10,7 @@ export class SnackbarService {
   private openSnackBar(message: string, type: string): void {
     let panelClass: string[] = []
     const config: MatSnackBarConfig = {
-      duration: 1000000,
+      duration: 10000,
       panelClass: [type, ...panelClass], 
       horizontalPosition: 'center',
       verticalPosition: 'top',
