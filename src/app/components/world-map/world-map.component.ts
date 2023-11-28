@@ -73,7 +73,7 @@ export class WorldMapComponent implements OnInit {
     (mapboxgl as typeof mapboxgl).accessToken = environment.mapboxAccessToken;
     const map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/mapbox/satellite-streets-v11',
+      style: 'mapbox://styles/mapbox/navigation-day-v1',
       center: coordinates,
       zoom: 8,
     });
