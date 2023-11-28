@@ -233,13 +233,13 @@ export class WorldMapComponent implements OnInit {
       .getElement()
       .parentElement?.getElementsByClassName('mapboxgl-popup-content')[0] as HTMLElement;
     popupElement.style.borderRadius = '0.5rem';
+    popupElement.style.padding = '0';
     popupElement.style.width = '15rem';
     popupElement.style.height = '15rem';
     const closeButtonElement = popup
       .getElement()
       .parentElement?.getElementsByClassName('mapboxgl-popup-close-button')[0] as HTMLElement;
-    closeButtonElement.style.top = '-114%';
-    closeButtonElement.style.left = '100%';
+    closeButtonElement.style.left = '105%';
   }
 
   observeStoryMarkers() {

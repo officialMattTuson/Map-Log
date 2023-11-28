@@ -19,7 +19,10 @@ export class SharedMapService {
     let conditionMet = false;
     let selectedLocations = '';
     result.features.forEach((feature: any) => {
-      if (!conditionMet && feature.place_type[0] === 'locality') {
+      if (!conditionMet && feature.place_type[0] === 'poi') {
+        selectedLocations = feature.place_name;
+        conditionMet = true;
+      } else if (!conditionMet && feature.place_type[0] === 'locality') {
         selectedLocations = feature.place_name;
         conditionMet = true;
       } else if (!conditionMet && feature.place_type[0] === 'place') {
