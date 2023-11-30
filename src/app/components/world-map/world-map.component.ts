@@ -12,6 +12,7 @@ import {GeocoderService} from 'src/app/endpoints/geocoder.service';
 import {Observable, Subject, map, take, takeUntil} from 'rxjs';
 import {SharedMapService} from 'src/app/services/shared-map.service';
 import {StoryMarker} from 'src/app/models.ts/marker';
+import {MapDrawerComponent} from '../map-drawer/map-drawer.component';
 
 @Component({
   selector: 'app-world-map',
@@ -240,6 +241,14 @@ export class WorldMapComponent implements OnInit {
       .getElement()
       .parentElement?.getElementsByClassName('mapboxgl-popup-close-button')[0] as HTMLElement;
     closeButtonElement.style.left = '105%';
+  }
+
+  openOverlay() {
+    const element = document.querySelector('.map-drawer') as HTMLElement;
+    element.style.width = '40vw'
+    element.style.height = '100vh'
+    element.style.transform = 'translate3d(-100%, 0, 0)'
+    this.mapOverlayService.openPanel(MapDrawerComponent, this.storyMarkers);
   }
 
   observeStoryMarkers() {

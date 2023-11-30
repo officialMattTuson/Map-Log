@@ -12,6 +12,14 @@
   <mat-drawer-content>
     <div id="map">
       <button
+        mat-icon-button
+        color="accent"
+        id="menu-btn"
+        (click)="openOverlay()"
+      >
+        <mat-icon id="menu-icon">menu</mat-icon>
+      </button>
+      <button
         mat-raised-button
         color="accent"
         *ngIf="storyMarkers.length > 0"

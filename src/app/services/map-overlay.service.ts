@@ -18,7 +18,7 @@ export class MapOverlayService {
   public openPanel(
     overlayComponent: Type<MapDrawerComponent>,
     storyMarkers: StoryMarker[],
-    data: any,
+    data?: any,
     locationDescription?: string
   ): MapOverlayComponent {
     this.createHostComponent(overlayComponent, storyMarkers, data, locationDescription);
@@ -34,6 +34,11 @@ export class MapOverlayService {
   ) {
     this._mapOverlayComponentRef =
       this._mapDirective.viewContainerRef.createComponent(MapOverlayComponent);
+      if (!data && !locationDescription) {
+        this._mapOverlayComponentRef.instance.createMapOverlayComponent(
+          overlayComponent, storyMarkers
+        );
+      }
     this._mapOverlayComponentRef.setInput('data', data);
     this._mapOverlayComponentRef.setInput('placeMarkerLocationDescription', locationDescription);
     this._mapOverlayComponentRef.instance.createMapOverlayComponent(

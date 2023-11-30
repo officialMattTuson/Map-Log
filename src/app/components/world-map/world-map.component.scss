@@ -10,6 +10,19 @@
   z-index: 100;
 }
 
+#menu-btn {
+  position: absolute;
+  top: 1rem;
+  left: 2rem;
+  z-index: 100;
+}
+
+#menu-icon {
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
 .map-drawer {
   width: 16rem;
   text-align: center;
@@ -24,6 +37,14 @@
     width: 100vw;
     top: auto;
     bottom: 0;
+  }
+
+  .mat-mdc-icon-button .mat-mdc-button-ripple {
+    padding: 2rem;
+  }
+
+  .mat-mdc-icon-button .mat-mdc-button-touch-target {
+    padding: 3rem;
   }
   
   .mapboxgl-popup-content {
