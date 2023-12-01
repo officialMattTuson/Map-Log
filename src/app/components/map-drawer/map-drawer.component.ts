@@ -19,7 +19,6 @@ export class MapDrawerComponent implements OnInit {
   selectedLocation: string;
   hasFailedSubmitAttempt: boolean;
   hasExistingStory = false;
-  isMenuOpen = false;
 
   form: FormGroup;
   storyControl: FormControl;
@@ -36,11 +35,6 @@ export class MapDrawerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (!this.selectedStoryMarker) {
-      this.isMenuOpen = true;
-      console.log('hello')
-      return;
-    }
     this.hasExistingStory = this.selectedStoryMarker.story.length > 0;
     this.createForm();
     const coordinates = this.selectedStoryMarker.marker.getLngLat();

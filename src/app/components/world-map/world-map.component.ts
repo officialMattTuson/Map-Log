@@ -13,6 +13,7 @@ import {Observable, Subject, map, take, takeUntil} from 'rxjs';
 import {SharedMapService} from 'src/app/services/shared-map.service';
 import {StoryMarker} from 'src/app/models.ts/marker';
 import {MapDrawerComponent} from '../map-drawer/map-drawer.component';
+import {MenuOverlayComponent} from '../menu-overlay/menu-overlay.component';
 
 @Component({
   selector: 'app-world-map',
@@ -245,10 +246,10 @@ export class WorldMapComponent implements OnInit {
 
   openOverlay() {
     const element = document.querySelector('.map-drawer') as HTMLElement;
-    element.style.width = '40vw'
-    element.style.height = '100vh'
-    element.style.transform = 'translate3d(-100%, 0, 0)'
-    this.mapOverlayService.openPanel(MapDrawerComponent, this.storyMarkers);
+    element.style.width = '30vw';
+    element.style.height = '100vh';
+    element.style.transform = 'translate3d(-100%, 0, 0)';
+    this.mapOverlayService.openPanel(MenuOverlayComponent, this.storyMarkers);
   }
 
   observeStoryMarkers() {

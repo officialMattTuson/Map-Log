@@ -4,6 +4,7 @@ import {MapOverlayDirective} from 'src/app/directives/map-overlay.directive';
 import {Subject} from 'rxjs';
 import {MapOverlayService} from 'src/app/services/map-overlay.service';
 import {StoryMarker} from 'src/app/models.ts/marker';
+import {MenuOverlayComponent} from '../menu-overlay/menu-overlay.component';
 
 @Component({
   selector: 'app-map-overlay',
@@ -15,6 +16,7 @@ export class MapOverlayComponent {
   @Input() placeMarkerLocationDescription: string;
 
   mapOverlayComponentRef: ComponentRef<MapDrawerComponent>;
+  menuOverlayComponentRef: ComponentRef<MenuOverlayComponent>;
   overlayHeader: string;
 
   @ViewChild(MapOverlayDirective, {static: true})
@@ -31,13 +33,18 @@ export class MapOverlayComponent {
   ) {
     const containerRef = this.mapOverlayDirective.viewContainerRef;
     this.mapOverlayComponentRef =
-    containerRef.createComponent<MapDrawerComponent>(overlayComponent);
+      containerRef.createComponent<MapDrawerComponent>(overlayComponent);
     storyMarker && (this.mapOverlayComponentRef.instance.selectedStoryMarker = storyMarker);
     this.mapOverlayComponentRef.instance.storyMarkers = storyMarkers;
     if (selectedLocation) {
-      this.mapOverlayComponentRef.instance.selectedLocation =
-      selectedLocation;
+      this.mapOverlayComponentRef.instance.selectedLocation = selectedLocation;
     }
+  }
+
+  createMenuOverlayComponent(overlayComponent: Type<MenuOverlayComponent>) {
+    const containerRef = this.mapOverlayDirective.viewContainerRef;
+    this.menuOverlayComponentRef =
+      containerRef.createComponent<MenuOverlayComponent>(overlayComponent);
   }
 
   closeOverlay() {

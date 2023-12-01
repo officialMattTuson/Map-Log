@@ -24,6 +24,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {MapOverlayDirective} from './directives/map-overlay.directive';
 import {MapOverlayComponent} from './components/map-overlay/map-overlay.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {MenuOverlayComponent} from './components/menu-overlay/menu-overlay.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     MapDrawerComponent,
     MapOverlayDirective,
     MapOverlayComponent,
+    MenuOverlayComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +53,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   exports: [
     BrowserModule,
@@ -68,7 +70,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

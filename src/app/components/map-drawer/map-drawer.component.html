@@ -1,51 +1,48 @@
-<ng-container *ngIf="isMenuOpen; else content"></ng-container>
-<ng-template #content>
-  <h3 id="location-title" class="mat-h3">{{ selectedLocation }}</h3>
+<h3 id="location-title" class="mat-h3">{{ selectedLocation }}</h3>
 
-  <div class="drawer-container" [formGroup]="form">
-    <ng-container *ngIf="!hasExistingStory; else viewBlock">
-      <div class="drawer-container__block">
-        <div class="drawer-container__block__control">
-          <mat-form-field>
-            <mat-label>When were you in this location?</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate [formControl]="startDateControl" placeholder="Start date" />
-              <input matEndDate [formControl]="endDateControl" placeholder="End date" />
-            </mat-date-range-input>
-            <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-          </mat-form-field>
-          <mat-error *ngIf="startDateControl.hasError('invalidDate')"
-            >These dates are already being used
+<div class="drawer-container" [formGroup]="form">
+  <ng-container *ngIf="!hasExistingStory; else viewBlock">
+    <div class="drawer-container__block">
+      <div class="drawer-container__block__control">
+        <mat-form-field>
+          <mat-label>When were you in this location?</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate [formControl]="startDateControl" placeholder="Start date" />
+            <input matEndDate [formControl]="endDateControl" placeholder="End date" />
+          </mat-date-range-input>
+          <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <mat-error *ngIf="startDateControl.hasError('invalidDate')"
+          >These dates are already being used
+        </mat-error>
+      </div>
+      <div class="drawer-container__block__control">
+        <mat-form-field appearance="fill" id="story-field">
+          <textarea
+            id="textarea"
+            matInput
+            [formControl]="storyControl"
+            placeholder="What did you do here?"
+            maxlength="400"
+          ></textarea>
+          <mat-error *ngIf="hasFailedSubmitAttempt"
+            >Please complete your story before submitting
           </mat-error>
-        </div>
-        <div class="drawer-container__block__control">
-          <mat-form-field appearance="fill" id="story-field">
-            <textarea
-              id="textarea"
-              matInput
-              [formControl]="storyControl"
-              placeholder="What did you do here?"
-              maxlength="400"
-            ></textarea>
-            <mat-error *ngIf="hasFailedSubmitAttempt"
-              >Please complete your story before submitting
-            </mat-error>
-          </mat-form-field>
-          <mat-hint>{{ storyControl.value.length + ' / 400' }}</mat-hint>
-        </div>
+        </mat-form-field>
+        <mat-hint>{{ storyControl.value.length + ' / 400' }}</mat-hint>
       </div>
+    </div>
 
-      <div class="drawer-container__block">
-        <ng-container *ngTemplateOutlet="photoButton"></ng-container>
-        <button mat-raised-button (click)="addLocationStory()" class="submit-btn" color="primary">
-          Add Location Details
-        </button>
-      </div>
-    </ng-container>
-  </div>
-</ng-template>
+    <div class="drawer-container__block">
+      <ng-container *ngTemplateOutlet="photoButton"></ng-container>
+      <button mat-raised-button (click)="addLocationStory()" class="submit-btn" color="primary">
+        Add Location Details
+      </button>
+    </div>
+  </ng-container>
+</div>
 
 <ng-template #viewBlock>
   <div class="drawer-container__block">
