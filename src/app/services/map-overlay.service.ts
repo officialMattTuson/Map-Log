@@ -22,7 +22,7 @@ export class MapOverlayService {
     data?: any,
     locationDescription?: string,
   ): MapOverlayComponent {
-    if (overlayComponent instanceof MapDrawerComponent) {
+    if (overlayComponent as Type<MapDrawerComponent>) {
       this.createMapComponent(
         overlayComponent as Type<MapDrawerComponent>,
         storyMarkers,
