@@ -39,12 +39,16 @@ export class MapOverlayComponent {
     if (selectedLocation) {
       this.mapOverlayComponentRef.instance.selectedLocation = selectedLocation;
     }
+
   }
 
-  createMenuOverlayComponent(overlayComponent: Type<MenuOverlayComponent>) {
+  createMenuOverlayComponent(overlayComponent: Type<MenuOverlayComponent>, storyMarkers: StoryMarker[]) {
     const containerRef = this.mapOverlayDirective.viewContainerRef;
+
     this.menuOverlayComponentRef =
       containerRef.createComponent<MenuOverlayComponent>(overlayComponent);
+      this.menuOverlayComponentRef.instance.storyMarkers = storyMarkers;
+
   }
 
   closeOverlay() {

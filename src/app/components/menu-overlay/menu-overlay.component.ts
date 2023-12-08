@@ -17,7 +17,7 @@ export class MenuOverlayComponent implements OnInit {
   ngOnInit(): void {
     this.observeStoryMarkers();
   }
-
+  
   observeStoryMarkers() {
     this.sharedMapService.$storyMarkers.pipe(takeUntil(this.destroy$)).subscribe(storyMarkers => {
       this.storyMarkers = storyMarkers;

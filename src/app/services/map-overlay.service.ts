@@ -19,18 +19,18 @@ export class MapOverlayService {
   public openPanel(
     overlayComponent: Type<MapDrawerComponent | MenuOverlayComponent>,
     storyMarkers: StoryMarker[],
-    data?: any,
+    selectedStoryMarker?: StoryMarker,
     locationDescription?: string,
   ): MapOverlayComponent {
-    if (overlayComponent as Type<MapDrawerComponent>) {
+    if (selectedStoryMarker) {
       this.createMapComponent(
         overlayComponent as Type<MapDrawerComponent>,
         storyMarkers,
-        data,
+        selectedStoryMarker,
         locationDescription,
-      );
-    } else {
-      this.createMenuComponent(overlayComponent as Type<MenuOverlayComponent>);
+        );
+      } else {
+      this.createMenuComponent(overlayComponent as Type<MenuOverlayComponent>, storyMarkers);
     }
     this._isOverlayOpen.next(true);
     return this._mapOverlayComponentRef.instance;
@@ -39,31 +39,35 @@ export class MapOverlayService {
   private createMapComponent(
     overlayComponent: Type<MapDrawerComponent>,
     storyMarkers: StoryMarker[],
-    data: any,
+    selectedStoryMarker: StoryMarker,
     locationDescription?: string,
   ) {
     this._mapOverlayComponentRef =
       this._mapDirective.viewContainerRef.createComponent(MapOverlayComponent);
-    if (!data && !locationDescription) {
+    if (!selectedStoryMarker && !locationDescription) {
       this._mapOverlayComponentRef.instance.createMapOverlayComponent(
         overlayComponent,
         storyMarkers,
       );
     }
-    this._mapOverlayComponentRef.setInput('data', data);
+    this._mapOverlayComponentRef.setInput('storyMarker', selectedStoryMarker);
     this._mapOverlayComponentRef.setInput('placeMarkerLocationDescription', locationDescription);
     this._mapOverlayComponentRef.instance.createMapOverlayComponent(
       overlayComponent,
       storyMarkers,
-      data,
+      selectedStoryMarker,
       locationDescription,
     );
   }
 
-  private createMenuComponent(overlayComponent: Type<MenuOverlayComponent>) {
+  private createMenuComponent(
+    overlayComponent: Type<MenuOverlayComponent>,
+    storyMarkers: StoryMarker[],
+  ) {
+
     this._mapOverlayComponentRef =
       this._mapDirective.viewContainerRef.createComponent(MapOverlayComponent);
-    this._mapOverlayComponentRef.instance.createMenuOverlayComponent(overlayComponent);
+    this._mapOverlayComponentRef.instance.createMenuOverlayComponent(overlayComponent, storyMarkers);
   }
 
   public closeOverlay() {
