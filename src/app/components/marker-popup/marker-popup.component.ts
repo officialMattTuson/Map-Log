@@ -38,6 +38,10 @@ export class MarkerPopupComponent implements OnInit {
 
   openOverlay() {
     this.popup.remove();
+    const element = document.querySelector('.map-drawer') as HTMLElement;
+    element.style.width = '100vw';
+    element.style.height = '42vh';
+    element.style.transform = 'translate3d(0, 100%, 0)';
     this.mapOverlayService.openPanel(
       MapDrawerComponent,
       this.storyMarkers,

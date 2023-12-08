@@ -227,8 +227,7 @@ export class WorldMapComponent implements OnInit {
   removeAllMarkers() {
     this.storyMarkers.forEach(storyMarker => storyMarker.marker.remove());
     this.map.removeLayer('lines');
-    this.map.removeSource('lines');
-    this.storyMarkers = [];
+    this.sharedMapService.setStoryMarkers([]);
   }
 
   overridePopupStyles(popup: mapboxgl.Popup) {
