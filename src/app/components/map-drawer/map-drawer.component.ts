@@ -76,7 +76,6 @@ export class MapDrawerComponent implements OnInit {
     );
     if (overlappingDates.length > 0) {
       this.startDateControl.setErrors({invalidDate: true});
-      this.resetForm();
       this.snackBarService.onError('These dates are already in use');
       return;
     }
@@ -99,12 +98,6 @@ export class MapDrawerComponent implements OnInit {
   updateStory() {
     this.hasExistingStory = false;
     this.patchForm();
-  }
-
-  resetForm() {
-    this.selectedStoryMarker.startDate = '';
-    this.selectedStoryMarker.endDate = '';
-    this.form.reset();
   }
 
   patchForm() {

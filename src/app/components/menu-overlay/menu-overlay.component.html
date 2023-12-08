@@ -1,7 +1,16 @@
 <div class="menu-container">
-  <ng-container *ngFor="let storyMarker of storyMarkers">
-    <mat-card>
-      <mat-card-title>{{ storyMarker.location }}</mat-card-title>
+  <h2>Trip Details</h2>
+  <ng-container *ngFor="let storyMarker of storyMarkers; let i = index">
+    <mat-card *ngIf="storyMarker.startDate" class="card" (click)="emitClickedMarker(storyMarker)">
+      <mat-card-content>
+        <img *ngIf="storyMarker.photo; else placeholderImg" src="storyMarker.photo"/>
+        <p>{{ getDateString(i) }}</p>
+      </mat-card-content>
+      <mat-card-title class="card-title">{{ storyMarker.location }}</mat-card-title>
     </mat-card>
   </ng-container>
 </div>
+
+<ng-template #placeholderImg>
+  <mat-icon id='add-photo' color="primary">image</mat-icon>
+</ng-template>
