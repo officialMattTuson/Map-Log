@@ -59,8 +59,10 @@ export class MapDrawerComponent implements OnInit {
       .getFeaturesFromCoordinates(coordinates)
       .pipe(take(1))
       .subscribe({
-        next: (result: any) =>
-          (this.selectedLocation = this.sharedMapService.getLocationDetails(result)),
+        next: (result: any) => {
+          this.selectedLocation = this.sharedMapService.getLocationDetails(result);
+          this.selectedStoryMarker.location = this.selectedLocation;
+        },
       });
   }
 

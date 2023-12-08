@@ -15,7 +15,7 @@ export class MarkerPopupComponent implements OnInit {
   @Input() storyMarkers: StoryMarker[];
   @Input() placeMarkerConfirmationPopup: boolean;
   @Input() popup: Popup;
-  @Output() placeMarkerClicked = new EventEmitter<void>();
+  @Output() placeMarkerClicked = new EventEmitter<string>();
 
   dateMessage: string;
 
@@ -33,7 +33,7 @@ export class MarkerPopupComponent implements OnInit {
   }
 
   onPlaceMarker() {
-    this.placeMarkerClicked.emit();
+    this.placeMarkerClicked.emit(this.location);
   }
 
   openOverlay() {

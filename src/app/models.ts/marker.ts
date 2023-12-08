@@ -5,5 +5,6 @@ export interface StoryMarker {
   story: string;
   startDate: string;
   endDate: string;
+  location: string;
   photo?: any;
 }

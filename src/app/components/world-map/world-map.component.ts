@@ -135,7 +135,7 @@ export class WorldMapComponent implements OnInit {
 
     popupComponentRef.instance.placeMarkerConfirmationPopup = true;
     popupComponentRef.instance.placeMarkerClicked.subscribe({
-      next: () => this.handleMarkerPlacedEvent(popup, event),
+      next: (location: string) => this.handleMarkerPlacedEvent(popup, event, location),
     });
   }
 
@@ -146,7 +146,7 @@ export class WorldMapComponent implements OnInit {
     });
   }
 
-  handleMarkerPlacedEvent(popup: mapboxgl.Popup, event: mapboxgl.MapMouseEvent) {
+  handleMarkerPlacedEvent(popup: mapboxgl.Popup, event: mapboxgl.MapMouseEvent, location: string) {
     popup.getElement().addEventListener('click', () => {
       const marker = new mapboxgl.Marker().setLngLat(event.lngLat).addTo(this.map);
       popup.remove();
@@ -155,6 +155,7 @@ export class WorldMapComponent implements OnInit {
         story: '',
         startDate: '',
         endDate: '',
+        location: location
       };
       this.storyMarkers = [...this.storyMarkers, newStoryMarker];
     });
